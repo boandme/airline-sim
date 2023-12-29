@@ -199,7 +199,7 @@ while playing:
     while True:
       aircraft = input("Which Aircraft from your collection would you like to choose? ")
       
-      if aircraft.lower in my_aircrafts:
+      if aircraft in my_aircrafts:
         aircraft = aircraft.lower()
         break
       else:
