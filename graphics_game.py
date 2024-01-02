@@ -106,7 +106,7 @@ aircrafts = {
 
 
 
-my_aircrafts = ["Dc 3", "dod"]
+my_aircrafts = ["Dc 3"]
 
 ##### Destinations #####
 destinations = ["Detroit", "Chicago", "Minneapolis", "Atlanta", "Miami", "New Orleans", "Washington DC", "New York City", "Denver", "Salt Lake City", "Seattle", "San Francisco", "Los Angeles", "San Diego", "Dallas", "Houston", "Kansas City", "Cincinnati", "Boston", "Portland", "Philadelphia"]
@@ -310,6 +310,32 @@ def buyplane():
       pygame.display.flip()
 
 
+def view_airline():
+  viewing = True
+  while viewing:
+    for event in pygame.event.get():
+        if event.type == pygame.QUIT:
+          pygame.quit()
+        if event.type == pygame.KEYDOWN:
+          if event.key == pygame.K_RETURN:
+            viewing = False
+    w.fill(bg)
+    airline = title_font.render("-------- World Air --------", True, white)
+    cash = font.render(f"Money: {money}", True, white)
+    leave_view = font.render("Press enter to leave", True, red)
+    aircraft_title = font.render("----- Aircrafts In Use ----- ", True, white)
+    for i in range(len(my_aircrafts)):
+      a = small_font.render(f"{i+1}: {my_aircrafts[i]}", True, white)
+      w.blit(a, (225, 350 + i * 40))
+    w.blit(airline, (140, 50))
+    w.blit(cash, (150, 150))
+    w.blit(leave_view, (200, 700))
+    w.blit(aircraft_title, (150, 300))
+    pygame.draw.line(w,black, (0, 685), (750,685), 5)
+    pygame.display.flip()
+    
+
+
 
 
 
@@ -324,7 +350,7 @@ while running:
   w.blit(title,(225, 50))
   opt1 = font.render("Fly Plane", True, white)
   opt2 = font.render("Buy Aircrafts", True, white)
-  opt3 = font.render("coming soon", True, white)
+  opt3 = font.render("Airline Profile", True, white)
   opt4 = font.render("coming soon", True, white)
   opt5 = font.render("coming soon", True, white)
   w.blit(opt1, (200,200))
@@ -375,12 +401,15 @@ while running:
 
   #### Main Options ####
   if num == 1:
-    print("g")
     flyplane()
     num = 0
   elif num == 2:
     buyplane()
     num = 0
+  elif num == 3:
+    view_airline()
+    num = 0
+
 
 
 pygame.display.update()
