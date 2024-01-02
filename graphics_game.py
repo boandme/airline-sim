@@ -1,9 +1,8 @@
-
 import pygame
 import pygame.font
 import random
 import time
-
+num = 0
 
 pygame.init()
 w = pygame.display.set_mode((750,750))
@@ -22,6 +21,7 @@ font = pygame.font.SysFont("Arial", 40)
 small_font = pygame.font.SysFont("Arial", 25)
 
 #### Aircrafts Dictionary ####
+aircraft_names = ["Dc 3", "Airbus A318", "Airbus A319", "Airbus A350", "Airbus A340", "Boeing 777", "Boeing 747", "Airbus A380"]
 aircrafts = {
   "Dc 3": {
     "cost": 1000,
@@ -106,7 +106,7 @@ aircrafts = {
 
 
 
-my_aircrafts = ["Dc 3", "diddly doe"]
+my_aircrafts = ["Dc 3", "dod"]
 
 ##### Destinations #####
 destinations = ["Detroit", "Chicago", "Minneapolis", "Atlanta", "Miami", "New Orleans", "Washington DC", "New York City", "Denver", "Salt Lake City", "Seattle", "San Francisco", "Los Angeles", "San Diego", "Dallas", "Houston", "Kansas City", "Cincinnati", "Boston", "Portland", "Philadelphia"]
@@ -124,7 +124,7 @@ landings = {
   "so bad it damaged the aircraft": -50
 
 }
-money = 500
+money = 50000
 
 
 def flyplane():
@@ -159,15 +159,10 @@ def flyplane():
     for event in pygame.event.get():
       x,y = pygame.mouse.get_pos()
       if event.type == pygame.MOUSEBUTTONDOWN:
-        print("ggs")
-        print(i)
-        print(str(x) + str(y))
         for i in range(len(my_aircrafts)):
           if (x > 150 and x < 550) and (y> 140+ i*75 and y < 200 + i*75):
             showing = False
-            print("hiii")
             aircraft = my_aircrafts[i]
-            print(aircraft)
       if event.type == pygame.QUIT:
             pygame.quit()
     pygame.display.flip()
@@ -209,7 +204,7 @@ def flyplane():
     pygame.draw.circle(w,black, (100,150), 5)
     start = small_font.render(p1, True, white)
     end = small_font.render(p2, True, white)
-    w.blit(end, (625,75))
+    w.blit(end, (575,75))
     w.blit(start, (75, 75))
     plane = pygame.transform.scale(plane, (90,67.5))
     i = 75
@@ -224,34 +219,97 @@ def flyplane():
       pygame.draw.circle(w,black, (100,150), 5)
       start = small_font.render(p1, True, white)
       end = small_font.render(p2, True, white)
-      w.blit(end, (625,75))
+      w.blit(end, (575,75))
       w.blit(start, (75, 75))
       w.blit(plane, (i, 118))
       i += 1
-      print(int(1000 * (aircrafts[aircraft]['speed']/distance)))
       pygame.time.wait(int(1000 * (aircrafts[aircraft]['speed']/distance)))
       pygame.display.flip()
+
+  
+      
+    pygame.draw.line(w,black, (0,375), (750,375), 5)
+    summary_txt = title_font.render("---- Flight Summary ---- ", True, white)
+    main_cost = 0
+    main_cost = aircrafts[aircraft]['passengers'] * aircrafts[aircraft]['per_passenger']
+    ticket = font.render(f"Ticket cost earning:   ${main_cost}", True, white)
+    comfort_rand = random.randint(0, aircrafts[aircraft]['comfort'])
+    main_cost += comfort_rand
+    safety_rand = random.randint(0, aircrafts[aircraft]['safety'])
+    main_cost += safety_rand
+    comfort = font.render(f"Comfort/Seating Earnings:   ${comfort_rand}", True, white)
+    landing,landing_pt = random.choice(list(landings.items()))
+    main_cost += landing_pt
+    safety = font.render(f"Safety Earnings:   ${safety_rand + landing_pt}", True, white)
+    total = font.render(f"Total Earnings:   $ {main_cost}", True, white)
+    money += main_cost
+    w.blit(summary_txt, (125,450))
+    w.blit(ticket, (150, 500))
+    w.blit(comfort, (150, 550))
+    w.blit(safety, (150,600))
+    w.blit(total, (150, 650))
+    pygame.display.flip()
+    pygame.time.wait(5000)
+    flying = False
+
+def buyplane():
+  buying = True
+  while buying:
+    global money
+    w.fill(bg)
+    aircraft_opt = title_font.render("Aircraft Shop", True, white)
+    w.blit(aircraft_opt, (225,25))
+    for i in range(len(aircraft_names)):
+      aircraft = aircraft_names[i]
+      a = font.render(f"{aircraft_names[i]} - ${aircrafts[aircraft]['cost']}", True, white)
+      w.blit(a,(200, int(150 + i * 75)))
+      r = pygame.Rect(150, 140 + i * 75, 500, 60 )
+      pygame.draw.rect(w,red,r, 5)
+    quit = font.render("Leave", True, white)
+    w.blit(quit, (60, 0))
+    quit_box = pygame.Rect(50,0, 150, 50)
+    pygame.draw.rect(w,black,quit_box, 5)
+    cash_rect = pygame.Rect(600,0, 150,50)
+    pygame.draw.rect(w,black,cash_rect, 2)
+    coin = pygame.image.load("coin.png")
+    coin = pygame.transform.scale(coin, (40,40))
+    w.blit(coin, (610,5))
+    cash = small_font.render(str(money), True, white)
+    w.blit(cash, (660, 10))
     pygame.display.flip()
 
-    if i >= 625:
-      summary = True
-      #while summary:
+    for event in pygame.event.get():
+      x,y = pygame.mouse.get_pos()
+      if event.type == pygame.MOUSEBUTTONDOWN:
+        if (x > 50 and x < 200) and (y > 0 and y < 50):
+          buying = False
+        for i in range(len(aircraft_names)):
+          aircraft = aircraft_names[i]
+          if (x > 150 and x < 650) and (y> 140+ i*75 and y < 200 + i*75):
+            if money >= aircrafts[aircraft]['cost']:
+              if aircrafts[aircraft] not in my_aircrafts:
+                my_aircrafts.append(str(aircraft))
+                money -= aircrafts[aircraft]['cost']
+                buying = False
+              else:
+                bought = small_font.render("* Already Owned Plane *", True, red)
+                w.blit(bought, (85, 85))
+                pygame.display.flip()
+                pygame.time.wait(500)
+
+            else:
+              broke = small_font.render("* Insufficient Funds - Try again when you're not broke *", True, red)
+              w.blit(broke, (85, 85))
+              pygame.display.flip()
+              pygame.time.wait(500)
+        
 
 
-    
+      if event.type == pygame.QUIT:
+        pygame.quit()
+      pygame.display.flip()
 
 
-
-
-     
-
-      
-          
-    
-    
-
-  
-  
 
 
 
@@ -265,7 +323,7 @@ while running:
   title = title_font.render("Airline Simulator", True, white)
   w.blit(title,(225, 50))
   opt1 = font.render("Fly Plane", True, white)
-  opt2 = font.render("coming soon", True, white)
+  opt2 = font.render("Buy Aircrafts", True, white)
   opt3 = font.render("coming soon", True, white)
   opt4 = font.render("coming soon", True, white)
   opt5 = font.render("coming soon", True, white)
@@ -274,16 +332,33 @@ while running:
   w.blit(opt3, (200,400))
   w.blit(opt4, (200,500))
   w.blit(opt5, (200, 600))
-  r1 = pygame.Rect(150, 175, 400, 85)
+  coin = pygame.image.load("coin.png")
+  coin = pygame.transform.scale(coin, (40,40))
+  w.blit(coin, (610,5))
+  cash = small_font.render(str(money), True, white)
+  w.blit(cash, (660, 10))
+  r = pygame.Rect(150, 175, 400, 85)
   r2 = pygame.Rect(150, 275, 400, 85)
   r3 = pygame.Rect(150, 375, 400, 85)
   r4= pygame.Rect(150, 475, 400, 85)
   r5 = pygame.Rect(150, 575, 400, 85)
-  pygame.draw.rect(w,red,r1, 5)
-  pygame.draw.rect(w,red,r2, 5)
-  pygame.draw.rect(w,red,r3, 5)
-  pygame.draw.rect(w,red,r4, 5)
-  pygame.draw.rect(w,red,r5, 5)
+  cash_rect = pygame.Rect(600,0, 150,50)
+  pygame.draw.rect(w,black,cash_rect, 2)
+  #pygame.draw.rect(w,red,r1, 5)
+  #pygame.draw.rect(w,red,r2, 5)
+  #pygame.draw.rect(w,red,r3, 5)
+  #pygame.draw.rect(w,red,r4, 5)
+  #pygame.draw.rect(w,red,r5, 5)
+  options = 5
+  for i in range(options):
+    r = pygame.Rect(150, 175 + i * 100, 400, 85)
+    pygame.draw.rect(w,red,r, 5)
+
+  pygame.display.flip()
+    
+
+
+
  
    #### Conditions ####
   x,y = pygame.mouse.get_pos()
@@ -291,19 +366,24 @@ while running:
     if event.type == pygame.QUIT:
       running = False
     if event.type == pygame.MOUSEBUTTONDOWN:
-      if (x > 150 and x < 650) and (y > 175 and y < 260):
-        flyplane()
+      for i in range(options):
+        if (x > 150 and x < 650) and (y > 175 + i * 100 and y < 260 + i * 100):
+          num = i + 1
+          print(num)
+        
+          
 
-  pygame.display.update()
+  #### Main Options ####
+  if num == 1:
+    print("g")
+    flyplane()
+    num = 0
+  elif num == 2:
+    buyplane()
+    num = 0
+
+
+pygame.display.update()
    
-
-
-
-#### Start of Game ###
-
-
-#name = input("Enter the name of your airline: ")
-
-
 
 
