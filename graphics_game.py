@@ -124,6 +124,20 @@ landings = {
   "so bad it damaged the aircraft": -50
 
 }
+
+##### Upgrades Dictionary ####
+upgrade_names = ["In-Flight Drinks Service", "In-Flight Food Service","Google Sponsership","Business class seating","First class seating","Apple Sponorship","Amazon Sponsorship","EntyFish Pilot", "dod"]
+upgrades= {
+  "In-Flight Drinks Service": 75000,
+  "In-Flight Food Service": 250000,
+  "Google Sponsership": 350000,
+  "Business class seating": 500000,
+  "First class seating": 750000,
+  "Apple Sponorship": 900000,
+  "Amazon Sponsorship": 1000000,
+  "EntyFish Pilot": 1200000,
+  "dod": 500,
+}
 money = 50000
 
 
@@ -333,7 +347,68 @@ def view_airline():
     w.blit(aircraft_title, (150, 300))
     pygame.draw.line(w,black, (0, 685), (750,685), 5)
     pygame.display.flip()
-    
+  
+def upgrade():
+  global money
+  upgrading = True
+  while upgrading:
+    num2 = 0
+    x = 20
+    w.fill(bg)
+    for event in pygame.event.get():
+        if event.type == pygame.QUIT:
+          pygame.quit()
+        if event.type == pygame.MOUSEBUTTONDOWN:
+          x,y = pygame.mouse.get_pos()
+          for i in range(len(upgrade_names)):
+            if ((x > 10 and x < 310) or (x > 400 and x < 700)) and (y > 140 + i * 75 and y < 215 + i * 75):
+              num2 = i + 1
+              
+              if x > 400:
+                num2 = i + 8
+
+              print(f"hi {num2}" )
+    if num2 == 1:
+      up = upgrade_names[num2-1]
+      money -= upgrades[up]
+      for k in my_aircrafts:
+        aircrafts[k]['comfort'] += 3
+      
+      
+      """In-Flight Drinks Service": 75000
+  "In-Flight Food Service": 250000
+  "Google Sponsership": 350000
+  "Business class seating": 500000
+  "First class seating": 750000
+  "Apple Sponorship": 900000
+  "Amazon Sponsorship": 1000000
+  "EntyFish Pilot": 1200000
+"""
+
+
+
+          
+
+    upgrade_title = title_font.render("Upgrades", True, white)
+    pygame.draw.line(w,black, (0,75), (750,75), 5)
+    w.blit(upgrade_title, (250,15))
+    num = 0
+    for i in range(len(upgrade_names)):
+      u = upgrade_names[i]
+      a = small_font.render(f"{u}",True, white)
+      m = small_font.render(f" ${upgrades[u]}", True, white)
+      y = num * 75
+      w.blit(a, (x, 150 + y))
+      w.blit(m, (x, 175 + y))
+      r = pygame.Rect(x-10,140 + y, 300, 75)
+      pygame.draw.rect(w, black, r, 5)  
+      if num >= 6:
+        x = 400
+        num = -1
+      num += 1
+            
+    pygame.display.flip()
+
 
 
 
@@ -351,7 +426,7 @@ while running:
   opt1 = font.render("Fly Plane", True, white)
   opt2 = font.render("Buy Aircrafts", True, white)
   opt3 = font.render("Airline Profile", True, white)
-  opt4 = font.render("coming soon", True, white)
+  opt4 = font.render("Upgrades", True, white)
   opt5 = font.render("coming soon", True, white)
   w.blit(opt1, (200,200))
   w.blit(opt2, (200, 300))
@@ -408,6 +483,9 @@ while running:
     num = 0
   elif num == 3:
     view_airline()
+    num = 0
+  elif num == 4:
+    upgrade()
     num = 0
 
 
