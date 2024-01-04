@@ -300,7 +300,7 @@ while playing:
         print()
         print("---------- Flight Summary --------")
         hours_spent = 0
-
+    
         ##### Calculate flight duration #####
         if (
             (p1 in west and p2 in west)
@@ -361,3 +361,7 @@ while playing:
             print(f"The landing was {landing}")
             print()
             print(f"Final Earnings: ${main_cost}")
+            
+    elif options == "5":
+        print("Thank you for playing!")
+        playing = False
