@@ -126,7 +126,7 @@ landings = {
 }
 
 ##### Upgrades Dictionary ####
-upgrade_names = ["In-Flight Drinks Service", "In-Flight Food Service","Google Sponsership","Business class seating","First class seating","Apple Sponorship","Amazon Sponsorship","EntyFish Pilot", "dod"]
+upgrade_names = ["In-Flight Drinks Service", "In-Flight Food Service","Google Sponsership","Business class seating","First class seating","Apple Sponorship","Amazon Sponsorship","EntyFish Pilot"]
 upgrades= {
   "In-Flight Drinks Service": 75000,
   "In-Flight Food Service": 250000,
@@ -136,7 +136,6 @@ upgrades= {
   "Apple Sponorship": 900000,
   "Amazon Sponsorship": 1000000,
   "EntyFish Pilot": 1200000,
-  "dod": 500,
 }
 money = 50000
 
@@ -247,9 +246,9 @@ def flyplane():
     main_cost = 0
     main_cost = aircrafts[aircraft]['passengers'] * aircrafts[aircraft]['per_passenger']
     ticket = font.render(f"Ticket cost earning:   ${main_cost}", True, white)
-    comfort_rand = random.randint(0, aircrafts[aircraft]['comfort'])
+    comfort_rand = 3 * random.randint(0, aircrafts[aircraft]['comfort'])
     main_cost += comfort_rand
-    safety_rand = random.randint(0, aircrafts[aircraft]['safety'])
+    safety_rand = 2 * random.randint(0, aircrafts[aircraft]['safety'])
     main_cost += safety_rand
     comfort = font.render(f"Comfort/Seating Earnings:   ${comfort_rand}", True, white)
     landing,landing_pt = random.choice(list(landings.items()))
@@ -353,13 +352,16 @@ def upgrade():
   upgrading = True
   while upgrading:
     num2 = 0
-    x = 20
+    
     w.fill(bg)
     for event in pygame.event.get():
         if event.type == pygame.QUIT:
           pygame.quit()
         if event.type == pygame.MOUSEBUTTONDOWN:
           x,y = pygame.mouse.get_pos()
+          if (x > 50 and x < 200) and (y > 0 and y < 50):
+            upgrading = False
+          
           for i in range(len(upgrade_names)):
             if ((x > 10 and x < 310) or (x > 400 and x < 700)) and (y > 140 + i * 75 and y < 215 + i * 75):
               num2 = i + 1
@@ -367,32 +369,16 @@ def upgrade():
               if x > 400:
                 num2 = i + 8
 
-              print(f"hi {num2}" )
-    if num2 == 1:
-      up = upgrade_names[num2-1]
-      money -= upgrades[up]
-      for k in my_aircrafts:
-        aircrafts[k]['comfort'] += 3
-      
-      
-      """In-Flight Drinks Service": 75000
-  "In-Flight Food Service": 250000
-  "Google Sponsership": 350000
-  "Business class seating": 500000
-  "First class seating": 750000
-  "Apple Sponorship": 900000
-  "Amazon Sponsorship": 1000000
-  "EntyFish Pilot": 1200000
-"""
+  
 
-
-
+        
           
 
     upgrade_title = title_font.render("Upgrades", True, white)
     pygame.draw.line(w,black, (0,75), (750,75), 5)
     w.blit(upgrade_title, (250,15))
     num = 0
+    x = 20
     for i in range(len(upgrade_names)):
       u = upgrade_names[i]
       a = small_font.render(f"{u}",True, white)
@@ -406,8 +392,126 @@ def upgrade():
         x = 400
         num = -1
       num += 1
+
+    quit = font.render("Leave", True, white)
+    w.blit(quit, (60, 0))
+    quit_box = pygame.Rect(50,0, 150, 50)
+    pygame.draw.rect(w,black,quit_box, 5)
+    cash_rect = pygame.Rect(600,0, 150,50)
+    pygame.draw.rect(w,black,cash_rect, 2)
+    coin = pygame.image.load("coin.png")
+    coin = pygame.transform.scale(coin, (40,40))
+    w.blit(coin, (610,5))
+    cash = small_font.render(str(money), True, white)
+    w.blit(cash, (660, 10))
             
     pygame.display.flip()
+
+
+    if num2 == 1:
+      up = upgrade_names[num2-1]
+      if money >= upgrades[up]:
+        money -= upgrades[up]
+        for k in my_aircrafts:
+          aircrafts[k]['comfort'] += 9
+
+      else:
+          broke = small_font.render("* Insufficient Funds - Try again when you're not broke *", True, red)
+          w.blit(broke, (85, 85))
+          pygame.display.flip()
+          pygame.time.wait(500)
+    elif num2 == 2:
+      up = upgrade_names[num2-1]
+      if money >= upgrades[up]:
+        money -= upgrades[up]
+        for k in my_aircrafts:
+          aircrafts[k]['comfort'] += 15
+
+      else:
+          broke = small_font.render("* Insufficient Funds - Try again when you're not broke *", True, red)
+          w.blit(broke, (85, 85))
+          pygame.display.flip()
+          pygame.time.wait(500)
+
+    elif num2 == 3:
+      up = upgrade_names[num2-1]
+      if money >= upgrades[up]:
+        money -= upgrades[up]
+        for k in my_aircrafts:
+          aircrafts[k]['per_passenger'] += 2
+
+      else:
+          broke = small_font.render("* Insufficient Funds - Try again when you're not broke *", True, red)
+          w.blit(broke, (85, 85))
+          pygame.display.flip()
+          pygame.time.wait(500)
+      
+    elif num2 == 4:
+      up = upgrade_names[num2-1]
+      if money >= upgrades[up]:
+        money -= upgrades[up]
+        for k in my_aircrafts:
+          aircrafts[k]['comfort'] += 25
+
+      else:
+          broke = small_font.render("* Insufficient Funds - Try again when you're not broke *", True, red)
+          w.blit(broke, (85, 85))
+          pygame.display.flip()
+          pygame.time.wait(500)
+      
+    elif num2 == 5:
+      up = upgrade_names[num2-1]
+      if money >= upgrades[up]:
+        money -= upgrades[up]
+        for k in my_aircrafts:
+          aircrafts[k]['comfort'] += 39
+
+      else:
+          broke = small_font.render("* Insufficient Funds - Try again when you're not broke *", True, red)
+          w.blit(broke, (85, 85))
+          pygame.display.flip()
+          pygame.time.wait(500)
+
+    elif num2 == 6:
+      up = upgrade_names[num2-1]
+      if money >= upgrades[up]:
+        money -= upgrades[up]
+        for k in my_aircrafts:
+          aircrafts[k]['per_passenger'] += 6
+
+      else:
+          broke = small_font.render("* Insufficient Funds - Try again when you're not broke *", True, red)
+          w.blit(broke, (85, 85))
+          pygame.display.flip()
+          pygame.time.wait(500)
+
+    elif num2 == 7:
+      up = upgrade_names[num2-1]
+      if money >= upgrades[up]:
+        money -= upgrades[up]
+        for k in my_aircrafts:
+          aircrafts[k]['per_passenger'] += 10
+
+      else:
+          broke = small_font.render("* Insufficient Funds - Try again when you're not broke *", True, red)
+          w.blit(broke, (85, 85))
+          pygame.display.flip()
+          pygame.time.wait(500)
+
+    elif num2 == 8:
+      up = upgrade_names[num2-1]
+      if money >= upgrades[up]:
+        money -= upgrades[up]
+        for k in my_aircrafts:
+          aircrafts[k]['safety'] += 19
+
+      else:
+          broke = small_font.render("* Insufficient Funds - Try again when you're not broke *", True, red)
+          w.blit(broke, (85, 85))
+          pygame.display.flip()
+          pygame.time.wait(500)
+
+      
 
 
 
@@ -427,12 +531,12 @@ while running:
   opt2 = font.render("Buy Aircrafts", True, white)
   opt3 = font.render("Airline Profile", True, white)
   opt4 = font.render("Upgrades", True, white)
-  opt5 = font.render("coming soon", True, white)
+  #opt5 = font.render("coming soon", True, white)
   w.blit(opt1, (200,200))
   w.blit(opt2, (200, 300))
   w.blit(opt3, (200,400))
   w.blit(opt4, (200,500))
-  w.blit(opt5, (200, 600))
+  #w.blit(opt5, (200, 600))
   coin = pygame.image.load("coin.png")
   coin = pygame.transform.scale(coin, (40,40))
   w.blit(coin, (610,5))
@@ -442,7 +546,7 @@ while running:
   r2 = pygame.Rect(150, 275, 400, 85)
   r3 = pygame.Rect(150, 375, 400, 85)
   r4= pygame.Rect(150, 475, 400, 85)
-  r5 = pygame.Rect(150, 575, 400, 85)
+  #r5 = pygame.Rect(150, 575, 400, 85)
   cash_rect = pygame.Rect(600,0, 150,50)
   pygame.draw.rect(w,black,cash_rect, 2)
   #pygame.draw.rect(w,red,r1, 5)
@@ -450,7 +554,7 @@ while running:
   #pygame.draw.rect(w,red,r3, 5)
   #pygame.draw.rect(w,red,r4, 5)
   #pygame.draw.rect(w,red,r5, 5)
-  options = 5
+  options = 4
   for i in range(options):
     r = pygame.Rect(150, 175 + i * 100, 400, 85)
     pygame.draw.rect(w,red,r, 5)
@@ -470,7 +574,7 @@ while running:
       for i in range(options):
         if (x > 150 and x < 650) and (y > 175 + i * 100 and y < 260 + i * 100):
           num = i + 1
-          print(num)
+          
         
           
 
