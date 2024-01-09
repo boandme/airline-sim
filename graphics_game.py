@@ -240,8 +240,10 @@ def flyplane():
     w.blit(path, (100,250))
     w.blit(takeoff, (100,300))
     w.blit(landing, (100, 350))
-    w.blit(directions, (150, 650))
-    pygame.draw.line(w, (0,0,0), (0,600), (750,600), 10)
+    
+    r = pygame.Rect(0,600, 750, 150)
+    pygame.draw.rect(w,blue,r, 0, 16)
+    w.blit(directions, (150, 650))  
     pygame.display.flip()
 
   flying = True
@@ -283,7 +285,9 @@ def flyplane():
 
   
       
-    pygame.draw.line(w,black, (0,375), (750,375), 5)
+    
+    r = pygame.Rect(0,375, 750, 375)
+    pygame.draw.rect(w,blue,r)
     summary_txt = title_font.render("---- Flight Summary ---- ", True, white)
     main_cost = 0
     main_cost = aircrafts[aircraft]['passengers'] * aircrafts[aircraft]['per_passenger']
@@ -304,7 +308,7 @@ def flyplane():
     w.blit(safety, (125,600))
     w.blit(total, (125, 650))
     pygame.display.flip()
-    pygame.time.wait(10000)
+    pygame.time.wait(5000)
     flying = False
 
 def buyplane():
@@ -379,16 +383,18 @@ def view_airline():
     draw_background()
     airline = title_font.render("-------- World Air --------", True, white)
     cash = font.render(f"Money: ${money}", True, white)
-    leave_view = font.render("Press enter to leave", True, red)
+    leave_view = font.render("Press enter to leave", True, white)
     aircraft_title = font.render("----- Aircrafts In Use ----- ", True, white)
     for i in range(len(my_aircrafts)):
       a = small_font.render(f"{i+1}: {my_aircrafts[i]}", True, white)
       w.blit(a, (225, 350 + i * 40))
     w.blit(airline, (100, 50))
     w.blit(cash, (150, 150))
-    w.blit(leave_view, (200, 700))
+    
     w.blit(aircraft_title, (150, 300))
-    pygame.draw.line(w,black, (0, 685), (750,685), 5)
+    r = pygame.Rect(0,685, 750, 65)
+    pygame.draw.rect(w,blue,r, 0, 16)
+    w.blit(leave_view, (200, 700))
     pygame.display.flip()
   
 def upgrade():
@@ -572,13 +578,16 @@ def credits():
     test_title = font.render("Game Testers: ", True, white)
     test1 = small_font.render("EntyXD", True, white)
     test2 = small_font.render("Monke", True, white)
-    leave_view = font.render("Press enter to leave", True, red)
+    leave_view = font.render("Press enter to leave", True, white)
     w.blit(credit_title, (100, 50))
     w.blit(test_title, (150, 150))
-    w.blit(leave_view, (200, 700))
+    
     w.blit(test1, (150, 250))
     w.blit(test2, (150, 275))
-    pygame.draw.line(w,black, (0, 685), (750,685), 5)
+    
+    r = pygame.Rect(0,685, 750, 65)
+    pygame.draw.rect(w,blue,r, 0, 16)
+    w.blit(leave_view, (200, 700))
     pygame.display.flip()
       
       
@@ -618,7 +627,7 @@ while running:
   r4= pygame.Rect(150, 475, 400, 85)
   #r5 = pygame.Rect(150, 575, 400, 85)
   cash_rect = pygame.Rect(600,0, 150,50)
-  pygame.draw.rect(w,black,cash_rect, 2)
+  pygame.draw.rect(w,black,cash_rect, 3)
   #pygame.draw.rect(w,red,r1, 5)
   #pygame.draw.rect(w,red,r2, 5)
   #pygame.draw.rect(w,red,r3, 5)
