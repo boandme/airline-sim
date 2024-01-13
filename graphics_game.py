@@ -156,6 +156,7 @@ def draw_background():
    bg = pygame.image.load("sky_bg.jpeg")
    bg = pygame.transform.scale(bg, (750,750))
    w.blit(bg, (0,0))
+<<<<<<< HEAD
 
 def advance_planes():
   global times
@@ -234,6 +235,8 @@ def autoplane():
     
           
   
+=======
+>>>>>>> 64b869232eb38d050d990c2ffdc504a16a9a2a75
 
 def flyplane():
   global money
@@ -681,7 +684,12 @@ def credits():
     pygame.draw.rect(w,blue,r, 0, 16)
     w.blit(leave_view, (200, 700))
     pygame.display.flip()
+<<<<<<< HEAD
 
+=======
+      
+      
+>>>>>>> 64b869232eb38d050d990c2ffdc504a16a9a2a75
 
 
 
