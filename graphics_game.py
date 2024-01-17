@@ -32,7 +32,7 @@ aircrafts = {
     "per_passenger": 80,
     "comfort": 25,
     "safety": 40,
-    "speed": 9
+    "speed": 5
     
   },
   "Airbus A318": {
@@ -144,9 +144,11 @@ p1 = random.choice(destinations)
 destinations.remove(p1)
 p2 = random.choice(destinations)
 destinations.append(p1)
+time_of_day = random.choice(["AM", "PM"])
 my_aircrafts.append({
+   "Name": "Dc 3",
    "p1":p1,
-   "p2": p2
+   "p2": p2,
 })
 money = 50000
 for i in my_aircrafts:
@@ -156,7 +158,6 @@ def draw_background():
    bg = pygame.image.load("sky_bg.jpeg")
    bg = pygame.transform.scale(bg, (750,750))
    w.blit(bg, (0,0))
-<<<<<<< HEAD
 
 def advance_planes():
   global times
@@ -164,6 +165,7 @@ def advance_planes():
     times[i] += c.get_time()
     
 def autoplane():
+  planeX = 5
   global times
   planing = True
   while planing:
@@ -176,58 +178,38 @@ def autoplane():
       if event.type == pygame.QUIT:
         pygame.quit()
     for i in range(len(my_aircrafts)):
-      d = pygame.Rect(0, 150 + i * 60, 375, 60)
+      d = pygame.Rect(0, 150 + i * 60, 375, 75)
       pygame.draw.rect(w,black, d, 5)
+      pygame.draw.line(w,black, (25, 200 + i * 75), (350, 200 + i * 75), 3)
+      pygame.draw.circle(w,black,(25,200 + i * 75),4)
+      pygame.draw.circle(w,black,(350,200 + i * 75), 4)
+      plane_name = small_font.render(my_aircrafts[i]["Name"], True, black)
+      point1 = small_font.render(my_aircrafts[i]["p1"], True, black)
+      point2 = small_font.render(my_aircrafts[i]["p2"], True, black)
+      w.blit(plane_name, (172, 165 + i * 75))
+      w.blit(point1, (15,165 + i * 75))
+      w.blit(point2, (330,165 + i * 75))
+      plane = pygame.image.load("airliner.png")
+      plane = pygame.transform.scale(plane, (50,35))
+      w.blit(plane, (planeX, 182 + i * 75))
+      
 
-      ac = my_aircrafts[i]
+      ac = my_aircrafts[i]["Name"]
       if times[i] > aircrafts[ac]['speed'] * 1000:
         print("hih")
         times[i] -= aircrafts[ac]['speed'] * 1000
         print("complete")
         
         
+        p1 = random.choice(destinations)
         destinations.remove(p1)
-        
+        p2 = random.choice(destinations)
         destinations.append(p1)
-        hours = random.randint(1,12)
-        minutes = random.randint(1,59)
+        my_aircrafts[i]["p1"] = p1
+        my_aircrafts[i]["p2"] = p2
       
-        if minutes < 10:
-          minutes = "0" + str(minutes)
-        time_of_day = random.choice(["AM", "PM"])
-        aircraft_opt = title_font.render("Pick your Aircraft", True, white)
-        w.blit(aircraft_opt, (175,50))
-        final_hours = hours
-        final_minutes = minutes
-        final_time_of_day = time_of_day
-        if ((p1 in west and p2 in west) or (p1 in east and p2 in east) or (p1 in mid and p2 in mid)):
-                hours_spent = random.randint(1, 3)
-        elif (p1 in west and p2 in mid) or (p2 in west and p1 in mid):
-                hours_spent = random.randint(2, 4)
-        elif (p1 in east and p2 in mid) or (p2 in east and p1 in mid):
-                hours_spent = random.randint(2, 4)
-        elif (p1 in west and p2 in east) or (p2 in west and p1 in east):
-                hours_spent = random.randint(3, 6)
-        else:
-          hours_spent = random.randint(1,3)
-        minutes_spent = random.randint(0, 59)
-        for i in range(hours_spent):
-            final_hours += 1
-            if final_hours > 12:
-                final_hours = 1
-                if time_of_day == "AM":
-                  final_time_of_day = "PM"
-                elif time_of_day == "PM":
-                  final_time_of_day = "AM"
-            final_minutes = int(final_minutes)
-            for i in range(minutes_spent):
-                final_minutes += 1
-                if final_minutes > 59:
-                    final_minutes = 0
-                    final_hours += 1
-            if final_minutes < 10:
-                final_minutes = "0" + str(final_minutes)
-
+        
+        
     c.tick(60)
     advance_planes()
     pygame.display.flip()
@@ -235,8 +217,6 @@ def autoplane():
     
           
   
-=======
->>>>>>> 64b869232eb38d050d990c2ffdc504a16a9a2a75
 
 def flyplane():
   global money
@@ -684,13 +664,8 @@ def credits():
     pygame.draw.rect(w,blue,r, 0, 16)
     w.blit(leave_view, (200, 700))
     pygame.display.flip()
-<<<<<<< HEAD
 
-=======
       
-      
->>>>>>> 64b869232eb38d050d990c2ffdc504a16a9a2a75
-
 
 
 
