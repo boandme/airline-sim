@@ -6,7 +6,11 @@ num = 0
 
 pygame.init() 
 w = pygame.display.set_mode((750,750))
+<<<<<<< HEAD
 pygame.display.set_caption('Airline Simulator v2.0.2 TEST | Vyom')
+=======
+pygame.display.set_caption('Airline Simulator v1.8.3 TEST | Vyom')
+>>>>>>> e9fc4cc9a8303298911e78ea85c946b3ff8f1d36
 c = pygame.time.Clock()
 timer = 0
 
@@ -152,7 +156,11 @@ my_aircrafts.append({
    "x": 5,
 })
 
+<<<<<<< HEAD
 money = 100000
+=======
+money = 50000
+>>>>>>> e9fc4cc9a8303298911e78ea85c946b3ff8f1d36
 for i in my_aircrafts:
   times.append(timer)
 
@@ -191,10 +199,13 @@ def advance_planes():
         main_cost += landing_pt
         total = font.render("+ " + str(main_cost), True, green)
         money += main_cost
+<<<<<<< HEAD
         w.blit(total, (375, 180 + i * 75))
         pygame.display.flip()
         pygame.time.wait(300)
         
+=======
+>>>>>>> e9fc4cc9a8303298911e78ea85c946b3ff8f1d36
      
     
     
@@ -207,8 +218,13 @@ def autoplane():
   distance = 315
   while planing:
     draw_background()
+<<<<<<< HEAD
     title = title_font.render("--- Your current flights ---", True, white)
     w.blit(title, (75, 50))
+=======
+    title = title_font.render("----- Your current flights -----", True, white)
+    w.blit(title, (150, 50))
+>>>>>>> e9fc4cc9a8303298911e78ea85c946b3ff8f1d36
 
     
     for event in pygame.event.get():
@@ -269,10 +285,17 @@ def autoplane():
         main_cost += landing_pt
         total = font.render("+ " + str(main_cost), True, green)
         money += main_cost
+<<<<<<< HEAD
         w.blit(total, (375, 180 + i * 75))
         pygame.display.flip()
         pygame.time.wait(300)
         
+=======
+   
+        w.blit(total, (375, 180 + i * 75))
+        pygame.display.flip()
+        pygame.time.wait(300)
+>>>>>>> e9fc4cc9a8303298911e78ea85c946b3ff8f1d36
          
       
       
