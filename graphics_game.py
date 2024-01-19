@@ -9,7 +9,7 @@ w = pygame.display.set_mode((750,750))
 pygame.display.set_caption('Airline Simulator v2.0.3 | Vyom')
 c = pygame.time.Clock()
 timer = 0
-
+print("hi")
 
 white=(255,255,255)
 red = (255,0,0)
