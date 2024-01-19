@@ -11,8 +11,6 @@ c = pygame.time.Clock()
 timer = 0
 
 
-
-print("hi")
 white=(255,255,255)
 red = (255,0,0)
 green = (17,140,79)
