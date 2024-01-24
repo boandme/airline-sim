@@ -153,7 +153,10 @@ my_aircrafts.append({
    "x": 5,
 })
 
+<<<<<<< HEAD
 
+=======
+>>>>>>> bfd62ebc9639d93a71b85b65303fa7d0416f5b69
 money = 100000
 for i in my_aircrafts:
   times.append(timer)
@@ -208,7 +211,11 @@ def autoplane():
   while planing:
     draw_background()
     title = title_font.render("--- Your current flights ---", True, white)
+<<<<<<< HEAD
     w.blit(title, (100, 50))
+=======
+    w.blit(title, (150, 50))
+>>>>>>> bfd62ebc9639d93a71b85b65303fa7d0416f5b69
 
     
     for event in pygame.event.get():
@@ -224,7 +231,11 @@ def autoplane():
       cover_dist = int(distance/(aircrafts[name]["speed"]))
       my_aircrafts[i]["x"] += cover_dist/100
       pygame.time.wait(10)
+<<<<<<< HEAD
       d = pygame.Rect(0, 150 + i * 100, 375, 75)
+=======
+      d = pygame.Rect(0, 150 + i * 75, 375, 75)
+>>>>>>> bfd62ebc9639d93a71b85b65303fa7d0416f5b69
       pygame.draw.rect(w,black, d, 5)
       pygame.draw.line(w,black, (25, 200 + i * 100), (350, 200 + i * 100), 3)
       pygame.draw.circle(w,black,(25,200 + i * 100),4)
@@ -274,8 +285,37 @@ def autoplane():
         main_cost += landing_pt
         #total = font.render("+ " + str(main_cost), True, green)
         money += main_cost
+<<<<<<< HEAD
         #w````.blit(total, (375, 180 + i * 75))
         pygame.display.flip()
+=======
+        w.blit(total, (375, 180 + i * 75))
+        pygame.display.flip()
+        
+        
+         
+      
+      
+      
+         
+
+    
+
+      
+      
+
+      ac = my_aircrafts[i]["Name"]
+      #if times[i] > aircrafts[ac]['speed'] * 1000:
+        #print("hih")
+        #times[i] -= aircrafts[ac]['speed'] * 1000
+        #print("complete")
+        
+        
+        
+        
+      
+        
+>>>>>>> bfd62ebc9639d93a71b85b65303fa7d0416f5b69
         
     c.tick(60)
     pygame.display.flip()
