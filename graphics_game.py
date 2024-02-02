@@ -22,6 +22,7 @@ light_green = (117,193,34)
 title_font = pygame.font.SysFont("Comic Sans", 50)
 font = pygame.font.SysFont("Comic Sans", 40)
 small_font = pygame.font.SysFont("Arial", 25)
+mid_small_font = pygame.font.SysFont("Comic Sans", 33)
 sell_rate = 0.45
 money = 0
 pilots = []
@@ -118,8 +119,11 @@ times = []
 my_aircrafts = []
 vowels = 'aeiou'
 consonants = 'bcdfghjklmnpqrstvwxyz'
-
-for i in range(6):
+first_name = ''
+surname = ''
+def getname():
+  global first_name
+  global surname
   first_name = ''
   for i in range(random.randint(1, 3)):
     first_name += random.choice(vowels) + ''.join(random.choices(consonants, k = 2)) 
@@ -130,22 +134,35 @@ for i in range(6):
     first_name += random.choice(vowels)
   if random.randrange(1):
     surname += random.choice(vowels)
-  pilots.append(f'{first_name.capitalize()} {surname.capitalize()}')
+  
+  
 
-for i in range(6):
-  first_name = ''
-  for i in range(random.randint(1, 3)):
-    first_name += random.choice(vowels) + ''.join(random.choices(consonants, k = 2)) 
-  surname = ''
-  for i in range(random.randint(1, 2)):
-    surname += random.choice(vowels) + ''.join(random.choices(consonants, k = 2))
-  if random.randrange(1):
-    first_name += random.choice(vowels)
-  if random.randrange(1):
-    surname += random.choice(vowels)
-  copilots.append(f'{first_name.capitalize()} {surname.capitalize()}')
+for i in range(5):
+  getname()
+  rating = random.randint(1,5)
+  price = int((rating * 10000) * random.randint(80, 100)/100)
+  pilots.append({
+    "Name": first_name.capitalize() + " " +  surname.capitalize(),
+    "Price": price,
+    "Rating": rating
+
+    })
+
+for i in range(5):
+  rating = random.randint(1,5)
+  price = int((rating * 10000) * random.randint(80, 100)/100)
+  getname()
+
+  copilots.append({
+    "Name": first_name.capitalize() + " " +  surname.capitalize(),
+    "Price": price,
+    "Rating": rating
+
+    })
 print(pilots)
 print(copilots)
+
+
 
 
 
@@ -556,6 +573,10 @@ def flyplane():
 def buyplane():
   upgradebuy = False
   planebuy = True
+  global copilots
+  global pilots
+  pilotbuy = False
+  copilotbuy = False
   global money
   buying = True
   
@@ -566,37 +587,34 @@ def buyplane():
     for event in pygame.event.get():
       if event.type == pygame.QUIT:
         pygame.quit()
-      
-    #  x,y = pygame.mouse.get_pos()
-     # if event.type == pygame.MOUSEBUTTONDOWN:
-     #   if r1.collidepoint(x,y):
-      #    planebuy = True
-      #    upgradebuy = False
-      #  if r2.collidepoint(x,y):
-      #    upgradebuy = True
-      #   planebuy = False
-      #  if (x > 50 and x < 200) and (y > 0 and y < 50):
-       #     buying = False
-
     
-    
-
-          
-    while planebuy and not upgradebuy:
+    ##### #BUYPLANES ####
+  
+    while planebuy :
       advance_planes()
       draw_background()
       aircraft_opt = title_font.render("Aircraft Shop", True, white)
       w.blit(aircraft_opt, (225,0))
-      r1 = pygame.Rect(0, 70, 375, 50)
-      r2 = pygame.Rect(375,70, 375, 50)
+      r1 = pygame.Rect(0, 70, 190, 50)
+      r2 = pygame.Rect(190,70, 190, 50)
+      r3 = pygame.Rect(380, 70, 190, 50)
+      r4 = pygame.Rect(570, 70, 180, 50)
       planes = font.render("Aircrafts", True, white)
       upgs = font.render("Upgrades", True, white)
+      pils = font.render("Pilots", True, white)
+      copils = font.render("Copilots", True, white)
       pygame.draw.rect(w, blue, r1)
       pygame.draw.rect(w, blue,r2 )
+      pygame.draw.rect(w, blue, r3)
+      pygame.draw.rect(w, blue, r4)
       pygame.draw.rect(w, white, r1, 3)
       pygame.draw.rect(w, white,r2, 3)
-      w.blit(planes, (100, 70))
-      w.blit(upgs, (475, 70))
+      pygame.draw.rect(w, white,r3, 3)
+      pygame.draw.rect(w, white,r4, 3)
+      w.blit(planes, (10, 70))
+      w.blit(upgs, (200, 70))
+      w.blit(pils, (390, 70))
+      w.blit(copils, (580,70))
       quit = font.render("< Back", True, white)     
       quit_box = pygame.Rect(50,0, 150, 50)
       pygame.draw.rect(w,blue,quit_box, 0, 16)
@@ -624,12 +642,22 @@ def buyplane():
           x,y = pygame.mouse.get_pos()
           
           if r1.collidepoint(x,y):
-            
             planebuy = True
             upgradebuy = False
+            copilotbuy = False
+            pilotbuy = False
           if r2.collidepoint(x,y):
-            
             upgradebuy = True
+            planebuy = False
+            copilotbuy = False
+            pilotbuy = False
+          if r3.collidepoint(x,y):
+            pilotbuy = True
+            planebuy = False
+            upgradebuy = False
+          if r4.collidepoint(x,y):
+            copilotbuy = True
+            pilotbuy = True
             planebuy = False
             
           if (x > 50 and x < 200) and (y > 0 and y < 50):
@@ -671,27 +699,33 @@ def buyplane():
             pygame.time.wait(500)
 
       pygame.display.flip()
-            
-      
 
         ###### UPGRADE PLANES OPTION #####
-      
-
-    while upgradebuy and not planebuy:
+    while upgradebuy:
       advance_planes()
       draw_background()
       aircraft_opt = title_font.render("Aircraft Shop", True, white)
       w.blit(aircraft_opt, (225,0))
-      r1 = pygame.Rect(0, 70, 375, 50)
-      r2 = pygame.Rect(375,70, 375, 50)
+      r1 = pygame.Rect(0, 70, 190, 50)
+      r2 = pygame.Rect(190,70, 190, 50)
+      r3 = pygame.Rect(380, 70, 190, 50)
+      r4 = pygame.Rect(570, 70, 180, 50)
       planes = font.render("Aircrafts", True, white)
       upgs = font.render("Upgrades", True, white)
+      pils = font.render("Pilots", True, white)
+      copils = font.render("Copilots", True, white)
       pygame.draw.rect(w, blue, r1)
       pygame.draw.rect(w, blue,r2 )
+      pygame.draw.rect(w, blue, r3)
+      pygame.draw.rect(w, blue, r4)
       pygame.draw.rect(w, white, r1, 3)
       pygame.draw.rect(w, white,r2, 3)
-      w.blit(planes, (100, 70))
-      w.blit(upgs, (475, 70))
+      pygame.draw.rect(w, white,r3, 3)
+      pygame.draw.rect(w, white,r4, 3)
+      w.blit(planes, (10, 70))
+      w.blit(upgs, (200, 70))
+      w.blit(pils, (390, 70))
+      w.blit(copils, (580,70))
       quit = font.render("< Back", True, white)     
       quit_box = pygame.Rect(50,0, 150, 50)
       pygame.draw.rect(w,blue,quit_box, 0, 16)
@@ -703,6 +737,7 @@ def buyplane():
       w.blit(coin, (610,5))
       cash = small_font.render(str(money), True, white)
       w.blit(cash, (660, 10))
+      
       for event in pygame.event.get():
         if event.type == pygame.QUIT:
             pygame.quit()
@@ -711,10 +746,22 @@ def buyplane():
           if r1.collidepoint(x,y):
             planebuy = True
             upgradebuy = False
+            copilotbuy = False
+            pilotbuy = False
           if r2.collidepoint(x,y):
             upgradebuy = True
             planebuy = False
-            print("hi")
+            copilotbuy = False
+            pilotbuy = False
+          if r3.collidepoint(x,y):
+            pilotbuy = True
+            planebuy = False
+            upgradebuy = False
+          if r4.collidepoint(x,y):
+            copilotbuy = True
+            pilotbuy = True
+            planebuy = False
+            upgradebuy = False
           if (x > 50 and x < 200) and (y > 0 and y < 50):
             buying = False
             planebuy = False
@@ -873,8 +920,163 @@ def buyplane():
           pygame.time.wait(500)
         num2 = 0
 
-    pygame.display.flip()
-    c.tick(30)
+      pygame.display.flip()
+      c.tick(30)
+
+    while pilotbuy:
+      advance_planes()
+      draw_background()
+      aircraft_opt = title_font.render("Aircraft Shop", True, white)
+      w.blit(aircraft_opt, (225,0))
+      r1 = pygame.Rect(0, 70, 190, 50)
+      r2 = pygame.Rect(190,70, 190, 50)
+      r3 = pygame.Rect(380, 70, 190, 50)
+      r4 = pygame.Rect(570, 70, 180, 50)
+      planes = font.render("Aircrafts", True, white)
+      upgs = font.render("Upgrades", True, white)
+      pils = font.render("Pilots", True, white)
+      copils = font.render("Copilots", True, white)
+      pygame.draw.rect(w, blue, r1)
+      pygame.draw.rect(w, blue,r2 )
+      pygame.draw.rect(w, blue, r3)
+      pygame.draw.rect(w, blue, r4)
+      pygame.draw.rect(w, white, r1, 3)
+      pygame.draw.rect(w, white,r2, 3)
+      pygame.draw.rect(w, white,r3, 3)
+      pygame.draw.rect(w, white,r4, 3)
+      w.blit(planes, (10, 70))
+      w.blit(upgs, (200, 70))
+      w.blit(pils, (390, 70))
+      w.blit(copils, (580,70))
+      quit = font.render("< Back", True, white)     
+      quit_box = pygame.Rect(50,0, 150, 50)
+      pygame.draw.rect(w,blue,quit_box, 0, 16)
+      w.blit(quit, (60, 0))
+      cash_rect = pygame.Rect(600,0, 150,50)
+      pygame.draw.rect(w,black,cash_rect, 2)
+      coin = pygame.image.load("coin.png")
+      coin = pygame.transform.scale(coin, (40,40))
+      w.blit(coin, (610,5))
+      cash = small_font.render(str(money), True, white)
+      w.blit(cash, (660, 10))
+      pfp = pygame.image.load("user-icon.png")
+      pfp = pygame.transform.scale(pfp, (75,75))
+      star = pygame.image.load("star.png")
+      star = pygame.transform.scale(star, (40,40))
+      for i in range(len(pilots)):
+        p = pygame.Rect(100, 150 + i * 125, 550, 100)
+        a = mid_small_font.render(pilots[i]["Name"], True, white)
+        price = font.render("$" + str(pilots[i]["Price"]), True, white)
+        pygame.draw.rect(w,blue,p, 0, 16)
+        w.blit(a, (225,150 + i * 125 ))
+        w.blit(price, (500, 195 + i * 125))
+        w.blit(pfp, (125, 160 + i * 125))
+
+        for d in range(pilots[i]["Rating"]):
+          w.blit(star, (225+d * 50, 195 + i * 125))
+
+      pygame.display.flip()
+      
+      for event in pygame.event.get():
+        if event.type == pygame.QUIT:
+            pygame.quit()
+        if event.type == pygame.MOUSEBUTTONDOWN:
+          x,y = pygame.mouse.get_pos()
+          if r1.collidepoint(x,y):
+            planebuy = True
+            upgradebuy = False
+            copilotbuy = False
+            pilotbuy = False
+          if r2.collidepoint(x,y):
+            upgradebuy = True
+            planebuy = False
+            copilotbuy = False
+            pilotbuy = False
+          if r3.collidepoint(x,y):
+            pilotbuy = True
+            planebuy = False
+            upgradebuy = False
+          if r4.collidepoint(x,y):
+            copilotbuy = True
+            pilotbuy = True
+            planebuy = False
+            upgradebuy = False
+          if (x > 50 and x < 200) and (y > 0 and y < 50):
+            buying = False
+            planebuy = False
+            upgradebuy = False
+            pilotbuy = False
+            copilotbuy = False
+      pygame.display.flip()
+          
+          
+
+    while copilotbuy:
+      advance_planes()
+      draw_background()
+      aircraft_opt = title_font.render("Aircraft Shop", True, white)
+      w.blit(aircraft_opt, (225,0))
+      r1 = pygame.Rect(0, 70, 190, 50)
+      r2 = pygame.Rect(190,70, 190, 50)
+      r3 = pygame.Rect(380, 70, 190, 50)
+      r4 = pygame.Rect(570, 70, 180, 50)
+      planes = font.render("Aircrafts", True, white)
+      upgs = font.render("Upgrades", True, white)
+      pils = font.render("Pilots", True, white)
+      copils = font.render("Copilots", True, white)
+      pygame.draw.rect(w, blue, r1)
+      pygame.draw.rect(w, blue,r2 )
+      pygame.draw.rect(w, blue, r3)
+      pygame.draw.rect(w, blue, r4)
+      pygame.draw.rect(w, white, r1, 3)
+      pygame.draw.rect(w, white,r2, 3)
+      pygame.draw.rect(w, white,r3, 3)
+      pygame.draw.rect(w, white,r4, 3)
+      w.blit(planes, (10, 70))
+      w.blit(upgs, (200, 70))
+      w.blit(pils, (390, 70))
+      w.blit(copils, (580,70))
+      quit = font.render("< Back", True, white)     
+      quit_box = pygame.Rect(50,0, 150, 50)
+      pygame.draw.rect(w,blue,quit_box, 0, 16)
+      w.blit(quit, (60, 0))
+      cash_rect = pygame.Rect(600,0, 150,50)
+      pygame.draw.rect(w,black,cash_rect, 2)
+      coin = pygame.image.load("coin.png")
+      coin = pygame.transform.scale(coin, (40,40))
+      w.blit(coin, (610,5))
+      cash = small_font.render(str(money), True, white)
+      w.blit(cash, (660, 10))
+      
+      for event in pygame.event.get():
+        if event.type == pygame.QUIT:
+            pygame.quit()
+        if event.type == pygame.MOUSEBUTTONDOWN:
+          x,y = pygame.mouse.get_pos()
+          if r1.collidepoint(x,y):
+            planebuy = True
+            upgradebuy = False
+            copilotbuy = False
+            pilotbuy = False
+          if r2.collidepoint(x,y):
+            upgradebuy = True
+            planebuy = False
+            copilotbuy = False
+            pilotbuy = False
+          if r3.collidepoint(x,y):
+            pilotbuy = True
+            planebuy = False
+            upgradebuy = False
+          if r4.collidepoint(x,y):
+            copilotbuy = True
+            pilotbuy = True
+            planebuy = False
+            upgradebuy = False
+          if (x > 50 and x < 200) and (y > 0 and y < 50):
+            buying = False
+            planebuy = False
+            upgradebuy = False
+      pygame.display.flip()
           
                 
 
@@ -1113,6 +1315,7 @@ while running:
   title_font = pygame.font.SysFont("Playfair Display", 50)
   font = pygame.font.SysFont("Karla", 40)
   small_font = pygame.font.SysFont("Karla", 25)
+  mid_small_font = pygame.font.SysFont("Karla", 33)
   title = title_font.render("Airline Simulator", True, white)
   w.blit(title,(200, 50))
   opt1 = font.render("View Current Planes ", True, white)
