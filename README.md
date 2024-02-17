@@ -2,6 +2,7 @@
 Update Log:
 
 V1.0[Dec 26] - Original Release ✈️
+
 V1.1[Jan 27] - Flying Update (fly planes) 🛫
 V1.2[Dec 28]: Times Update (realistic departures / arrivals)⏱️
 V1.3[Dec 29]- Planes Update (more planes) 🛩️
