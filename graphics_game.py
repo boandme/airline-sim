@@ -163,10 +163,10 @@ for i in range(5):
 
 
 ##### Destinations #####
-destinations = ["DTW", "ORD", "MSP", "ATL", "MIA", "MSY", "IAD", "JFK", "DEN", "SLC", "SEA", "SFO", "LAX", "SAN", "DFW", "IAH", "MCI", "CVG", "Boston", "PDX", "PHL"]
-west = ["SEA", "PDX", "SFO", "LAX", "SAN", "SLC"]
-mid = ["DTW", "ORD", "DEN", "DFW", "IAH", "MCI", "CVG", "MSP"]
-east = ["ATL", "MIA", "MSY", "IAD", "JFK", "BOS", "PHL"]
+destinations = ["DTW", "ORD", "MSP", "ATL", "MIA", "MSY", "IAD", "JFK", "DEN", "SLC", "SEA", "SFO", "LAX", "SAN", "DFW", "IAH", "MCI", "CVG", "BOS", "PDX", "PHL", "IAH", "FLL", "PBI", "BNA", "DAL", "HNL", "ANC", "LIH", "EWR", "AUW"]
+#west = ["SEA", "PDX", "SFO", "LAX", "SAN", "SLC"]
+#mid = ["DTW", "ORD", "DEN", "DFW", "IAH", "MCI", "CVG", "MSP"]
+#east = ["ATL", "MIA", "MSY", "IAD", "JFK", "BOS", "PHL"]
 landings = {
   "rough": 20,
   "terrible": 10,
