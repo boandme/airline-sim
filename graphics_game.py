@@ -205,7 +205,7 @@ my_aircrafts.append({
    "Copilot": "none"
 })
 
-money = 1000
+money = 50000
 
 def draw_background():
    bg = pygame.image.load("sky_bg.jpeg")
