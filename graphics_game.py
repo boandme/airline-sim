@@ -164,9 +164,25 @@ for i in range(5):
 
 ##### Destinations #####
 destinations = ["DTW", "ORD", "MSP", "ATL", "MIA", "MSY", "IAD", "JFK", "DEN", "SLC", "SEA", "SFO", "LAX", "SAN", "DFW", "IAH", "MCI", "CVG", "Boston", "PDX", "PHL"]
-west = ["SEA", "PDX", "SFO", "LAX", "SAN", "SLC"]
-mid = ["DTW", "ORD", "DEN", "DFW", "IAH", "MCI", "CVG", "MSP"]
-east = ["ATL", "MIA", "MSY", "IAD", "JFK", "BOS", "PHL"]
+domestic_destinations = [{
+  "Name": "New York City", 
+  "x": 214,
+  "y": 118
+},
+{
+  "Name": "Los Angeles",
+  "x": 132,
+  "y": 128
+},
+{
+  "Name": "Los Angeles",
+  "x": 132,
+  "y": 128
+},
+]
+#west = ["SEA", "PDX", "SFO", "LAX", "SAN", "SLC"]
+#mid = ["DTW", "ORD", "DEN", "DFW", "IAH", "MCI", "CVG", "MSP"]
+#east = ["ATL", "MIA", "MSY", "IAD", "JFK", "BOS", "PHL"]
 landings = {
   "rough": 20,
   "terrible": 10,
@@ -205,7 +221,7 @@ my_aircrafts.append({
    "Copilot": "none"
 })
 
-money = 1000
+money = 50000
 
 def draw_background():
    bg = pygame.image.load("sky_bg.jpeg")
@@ -1509,9 +1525,91 @@ def credits():
     w.blit(leave_view, (200, 700))
     pygame.display.flip()
 
+def mapview():
+  mapping = True
+  w = pygame.display.set_mode([720,500])
+  while mapping:
+    
+    draw_background()
+    map = pygame.image.load("worldmap.jpeg")
+    map = pygame.transform.scale(map, (720,360))
+    w.blit(map, (0,0))
+    for event in pygame.event.get():
+      if event.type == pygame.QUIT:
+        pygame.quit()
+      if event.type == pygame.MOUSEBUTTONDOWN:
+        mapping = False
+    domestic_destinations = [{
+    "Name": "New York City", 
+    "x": 214,
+    "y": 118
+      },
+    {   
+    "Name": "Los Angeles",
+    "x": 132,
+    "y": 128
+    },
+    {
+    "Name": "Chicago",
+    "x": 186,
+    "y": 114
+  },
+  {
+    "Name": "Houston",
+    "x": 170,
+    "y": 134
+  },
+  {
+    "Name": "Philadelphia",
+    "x": 208,
+    "y": 120
+  },
+  {
+    "Name": "Indianapolis",
+    "x": 188,
+    "y": 121
+  },
+  {
+    "Name": "San Francisco",
+    "x": 127,
+    "y": 121
+  },
+  {
+    "Name": "Seattle",
+    "x": 129,
+    "y": 107
+  },
+  {
+    "Name": "Denver",
+    "x": 150,
+    "y": 120
+  },
+  {
+    "Name": "Boston",
+    "x": 218,
+    "y": 114
+  },
+  ]
 
+    
+    flightmap = title_font.render("Flight Map", True, black)
+    quit = font.render("< Back", True, white)
+    quit_box = pygame.Rect(10,450, 150, 50)
+    pygame.draw.rect(w,blue,quit_box, 0, 16)
+    w.blit(quit, (30, 450))
+    coin = pygame.image.load("coin.png")
+    coin = pygame.transform.scale(coin, (40,40))
+    w.blit(coin, (580,450))
+    cash = small_font.render(str(money), True, black)
+    w.blit(cash, (630, 460))
+    pygame.draw.circle(w, black, (218,114), (1))
+    cash_rect = pygame.Rect(570,450, 150,50)
+    pygame.draw.rect(w,black,cash_rect, 3)
+    
+    pygame.display.flip()
 running = True
 music = pygame.mixer.Sound("cosmic-love.mp3")
+
 while running:
   pygame.mixer.Sound.play(music)
   draw_background()
@@ -1571,7 +1669,8 @@ while running:
           num = i + 1
   #### Main Options ####
   if num == 1:
-    autoplane()
+    mapview()
+    w = pygame.display.set_mode([750,750])
     num = 0
   elif num == 2:
     buyplane()
