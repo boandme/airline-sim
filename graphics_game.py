@@ -164,25 +164,9 @@ for i in range(5):
 
 ##### Destinations #####
 destinations = ["DTW", "ORD", "MSP", "ATL", "MIA", "MSY", "IAD", "JFK", "DEN", "SLC", "SEA", "SFO", "LAX", "SAN", "DFW", "IAH", "MCI", "CVG", "Boston", "PDX", "PHL"]
-domestic_destinations = [{
-  "Name": "New York City", 
-  "x": 214,
-  "y": 118
-},
-{
-  "Name": "Los Angeles",
-  "x": 132,
-  "y": 128
-},
-{
-  "Name": "Los Angeles",
-  "x": 132,
-  "y": 128
-},
-]
-#west = ["SEA", "PDX", "SFO", "LAX", "SAN", "SLC"]
-#mid = ["DTW", "ORD", "DEN", "DFW", "IAH", "MCI", "CVG", "MSP"]
-#east = ["ATL", "MIA", "MSY", "IAD", "JFK", "BOS", "PHL"]
+west = ["SEA", "PDX", "SFO", "LAX", "SAN", "SLC"]
+mid = ["DTW", "ORD", "DEN", "DFW", "IAH", "MCI", "CVG", "MSP"]
+east = ["ATL", "MIA", "MSY", "IAD", "JFK", "BOS", "PHL"]
 landings = {
   "rough": 20,
   "terrible": 10,
