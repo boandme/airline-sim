@@ -2,6 +2,7 @@ import pygame
 import pygame.font
 import random
 import time
+import math
 num = 0
 pygame.init() 
 w = pygame.display.set_mode((750,750))
@@ -164,6 +165,59 @@ for i in range(5):
 
 ##### Destinations #####
 destinations = ["DTW", "ORD", "MSP", "ATL", "MIA", "MSY", "IAD", "JFK", "DEN", "SLC", "SEA", "SFO", "LAX", "SAN", "DFW", "IAH", "MCI", "CVG", "Boston", "PDX", "PHL"]
+domestic_destinations = [{
+    "Name": "New York City", 
+    "x": 214,
+    "y": 118
+      },
+    {   
+    "Name": "Los Angeles",
+    "x": 132,
+    "y": 128
+    },
+    {
+    "Name": "Chicago",
+    "x": 186,
+    "y": 114
+  },
+  {
+    "Name": "Houston",
+    "x": 170,
+    "y": 134
+  },
+  {
+    "Name": "Philadelphia",
+    "x": 208,
+    "y": 120
+  },
+  {
+    "Name": "Indianapolis",
+    "x": 188,
+    "y": 121
+  },
+  {
+    "Name": "San Francisco",
+    "x": 127,
+    "y": 121
+  },
+  {
+    "Name": "Seattle",
+    "x": 129,
+    "y": 107
+  },
+  {
+    "Name": "Denver",
+    "x": 150,
+    "y": 120
+  },
+  {
+    "Name": "Boston",
+    "x": 218,
+    "y": 114
+  },
+  ]
+
+    
 west = ["SEA", "PDX", "SFO", "LAX", "SAN", "SLC"]
 mid = ["DTW", "ORD", "DEN", "DFW", "IAH", "MCI", "CVG", "MSP"]
 east = ["ATL", "MIA", "MSY", "IAD", "JFK", "BOS", "PHL"]
@@ -191,16 +245,17 @@ upgrades= {
   "Amazon Sponsorship": 1000000,
   "EntyFish Pilot": 1200000,
 }
-p1 = random.choice(destinations)
-destinations.remove(p1)
-p2 = random.choice(destinations)
-destinations.append(p1)
+p1 = random.choice(domestic_destinations)
+domestic_destinations.remove(p1)
+p2 = random.choice(domestic_destinations)
+domestic_destinations.append(p1)
 time_of_day = random.choice(["AM", "PM"])
 my_aircrafts.append({
    "Name": "Dc 3",
-   "p1":p1,
-   "p2": p2,
-   "x": 5,
+   "p1":p1["Name"],
+   "p2": p2["Name"],
+   "x": p1["x"],
+   "y": p1["y"],
    "Pilot": "none",
    "Copilot": "none"
 })
@@ -1510,6 +1565,9 @@ def credits():
     pygame.display.flip()
 
 def mapview():
+  global money
+  final_x = 0
+  final_y = 0
   mapping = True
   w = pygame.display.set_mode([720,500])
   while mapping:
@@ -1523,58 +1581,6 @@ def mapview():
         pygame.quit()
       if event.type == pygame.MOUSEBUTTONDOWN:
         mapping = False
-    domestic_destinations = [{
-    "Name": "New York City", 
-    "x": 214,
-    "y": 118
-      },
-    {   
-    "Name": "Los Angeles",
-    "x": 132,
-    "y": 128
-    },
-    {
-    "Name": "Chicago",
-    "x": 186,
-    "y": 114
-  },
-  {
-    "Name": "Houston",
-    "x": 170,
-    "y": 134
-  },
-  {
-    "Name": "Philadelphia",
-    "x": 208,
-    "y": 120
-  },
-  {
-    "Name": "Indianapolis",
-    "x": 188,
-    "y": 121
-  },
-  {
-    "Name": "San Francisco",
-    "x": 127,
-    "y": 121
-  },
-  {
-    "Name": "Seattle",
-    "x": 129,
-    "y": 107
-  },
-  {
-    "Name": "Denver",
-    "x": 150,
-    "y": 120
-  },
-  {
-    "Name": "Boston",
-    "x": 218,
-    "y": 114
-  },
-  ]
-
     
     flightmap = title_font.render("Flight Map", True, black)
     quit = font.render("< Back", True, white)
@@ -1589,7 +1595,82 @@ def mapview():
     pygame.draw.circle(w, black, (218,114), (1))
     cash_rect = pygame.Rect(570,450, 150,50)
     pygame.draw.rect(w,black,cash_rect, 3)
+    for i in range(len(my_aircrafts)):
+      plane = pygame.image.load("2d airliner.png")
+      plane = pygame.transform.scale(plane, (15,15))
+      w.blit(plane, (my_aircrafts[i]["x"], my_aircrafts[i]["y"]))
+      for d in range(len(domestic_destinations)):
+        if my_aircrafts[i]["p2"] == domestic_destinations[d]["Name"]:
+          destination = domestic_destinations[d]["Name"]
+          final_x = domestic_destinations[d]["x"]
+          final_y = domestic_destinations[d]["y"]
+         
+          
+        if my_aircrafts[i]["p1"] == domestic_destinations[d]["Name"]:
+          
+          start_x = domestic_destinations[d]["x"]
+          start_y = domestic_destinations[d]["y"]
+      delta_x = final_x - start_x
+      delta_y = final_y - start_y
+
+    # Calculate the distance using the Pythagorean theorem
+      distance = math.sqrt(delta_x**2 + delta_y**2)
+
+    # Calculate velocity for both x and y axes
+      name = my_aircrafts[i]["Name"] 
+      speed = aircrafts[name]["speed"] * 100
+      velocity_x = delta_x / speed
+      velocity_y = delta_y / speed
+      my_aircrafts[i]["x"] += velocity_x
+      my_aircrafts[i]["y"] += velocity_y
+
+      x_range_low = final_x - 10
+      x_range_high = final_x + 10
+      y_range_low = final_y - 10
+      y_range_high = final_y + 10
+      if (my_aircrafts[i]["x"] >= x_range_low and my_aircrafts[i]["x"] <=  x_range_high) and (my_aircrafts[i]["y"] >= y_range_low and my_aircrafts[i]["y"] <=  y_range_high):
+        p1 = random.choice(domestic_destinations)
+        domestic_destinations.remove(p1)
+        p2 = random.choice(domestic_destinations)
+        domestic_destinations.append(p1)
+        my_aircrafts[i]["p1"] = p1["Name"]
+        my_aircrafts[i]["p2"] = p2["Name"]
+        my_aircrafts[i]["x"] = p1["x"]
+        my_aircrafts[i]["y"] = p1["y"]
+        main_cost = 0
+        name = my_aircrafts[i]["Name"]
+        main_cost = aircrafts[name]['passengers'] * aircrafts[name]['per_passenger']
+        comfort_rand = 3 * random.randint(0, aircrafts[name]['comfort'])
+        main_cost += comfort_rand
+        safety_rand = 2 * random.randint(0, aircrafts[name]['safety'])
+        main_cost += safety_rand
+        pilot = my_aircrafts[i]["Pilot"]
+        
+        copilot = my_aircrafts[i]["Copilot"]
+        for d in range(len(my_pilots)):
+          
+          if my_pilots[d]["Name"] == pilot:
+            my_pilots[d]["Level"] += 0.6
+
+        for d in range(len(my_copilots)):
+          if my_copilots[d]["Name"] == copilot:
+            my_copilots[d]["Level"] += 0.3
+
+        landing,landing_pt = random.choice(list(landings.items()))
+        main_cost += landing_pt
+        #total = font.render("+ " + str(main_cost), True, green)
+        money += main_cost
+        #w````.blit(total, (375, 180 + i * 75))
+        pygame.display.flip()
+        
     
+      pygame.display.flip()
+      c.tick(30)
+
+
+
+   
+
     pygame.display.flip()
 running = True
 music = pygame.mixer.Sound("cosmic-love.mp3")
