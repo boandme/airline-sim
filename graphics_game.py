@@ -165,7 +165,8 @@ for i in range(5):
 
 ##### Destinations #####
 destinations = ["DTW", "ORD", "MSP", "ATL", "MIA", "MSY", "IAD", "JFK", "DEN", "SLC", "SEA", "SFO", "LAX", "SAN", "DFW", "IAH", "MCI", "CVG", "Boston", "PDX", "PHL"]
-domestic_destinations = [{
+
+international_destinations = [{
     "Name": "New York City", 
     "x": 214,
     "y": 118
@@ -216,8 +217,7 @@ domestic_destinations = [{
     "y": 114
   },
   ]
-
-    
+ 
 west = ["SEA", "PDX", "SFO", "LAX", "SAN", "SLC"]
 mid = ["DTW", "ORD", "DEN", "DFW", "IAH", "MCI", "CVG", "MSP"]
 east = ["ATL", "MIA", "MSY", "IAD", "JFK", "BOS", "PHL"]
@@ -245,9 +245,64 @@ upgrades= {
   "Amazon Sponsorship": 1000000,
   "EntyFish Pilot": 1200000,
 }
+domestic_destinations = [{
+    "Name": "New York City", 
+    "x": 718,
+    "y": 244
+      },
+    {   
+    "Name": "Los Angeles",
+    "x": 77,
+    "y": 381
+    },
+    {
+    "Name": "Chicago",
+    "x": 529,
+    "y": 259
+  },
+  {
+    "Name": "Houston",
+    "x": 429,
+    "y": 505
+  },
+  {
+    "Name": "Philadelphia",
+    "x": 711,
+    "y": 258
+  },
+  {
+    "Name": "Indianapolis",
+    "x": 553,
+    "y": 296
+  },
+  {
+    "Name": "San Francisco",
+    "x": 37,
+    "y": 297
+  },
+  {
+    "Name": "Seattle",
+    "x": 86,
+    "y": 103
+  },
+  {
+    "Name": "Denver",
+    "x": 288,
+    "y": 301
+  },
+  {
+    "Name": "Boston",
+    "x": 751,
+    "y": 204
+  },
+  ]
+
+    
 p1 = random.choice(domestic_destinations)
 domestic_destinations.remove(p1)
 p2 = random.choice(domestic_destinations)
+print(p1)
+print(p2)
 domestic_destinations.append(p1)
 time_of_day = random.choice(["AM", "PM"])
 my_aircrafts.append({
@@ -264,7 +319,7 @@ money = 50000
 
 def draw_background():
    bg = pygame.image.load("sky_bg.jpeg")
-   bg = pygame.transform.scale(bg, (750,750))
+   bg = pygame.transform.scale(bg, (800,800))
    w.blit(bg, (0,0))
 
 def advance_planes():
@@ -778,11 +833,18 @@ def buyplane():
               if (x > 150 and x < 650) and (y> 140+ i*75 and y < 200 + i*75):
                 if money >= aircrafts[aircraft]['cost']:
                   if aircrafts[aircraft] not in my_aircrafts:
+                    p1 = random.choice(domestic_destinations)
+                    domestic_destinations.remove(p1)
+                    p2 = random.choice(domestic_destinations)
+                    print(p1)
+                    print(p2)
+                    domestic_destinations.append(p1)
                     my_aircrafts.append({
                       "Name": aircraft,
                       "p1": p1,
                       "p2": p2,
                       "x": 5,
+                      "y": 5,
                       "Pilot": "none",
                       "Copilot": "none",
                       
@@ -1569,36 +1631,44 @@ def mapview():
   final_x = 0
   final_y = 0
   mapping = True
-  w = pygame.display.set_mode([720,500])
+  w = pygame.display.set_mode([800,700])
+ 
+
+  start_x = 500
+  start_y = 500
   while mapping:
     
     draw_background()
-    map = pygame.image.load("worldmap.jpeg")
-    map = pygame.transform.scale(map, (720,360))
+    quit_box = pygame.Rect(10,630, 150, 50)
+    map = pygame.image.load("us_map.jpeg")
+    map = pygame.transform.scale(map, (800,600))
     w.blit(map, (0,0))
     for event in pygame.event.get():
       if event.type == pygame.QUIT:
         pygame.quit()
       if event.type == pygame.MOUSEBUTTONDOWN:
-        mapping = False
+        x,y = pygame.mouse.get_pos()
+        if quit_box.collidepoint(x,y):
+          mapping = False
+        print(x,y)
     
     flightmap = title_font.render("Flight Map", True, black)
     quit = font.render("< Back", True, white)
-    quit_box = pygame.Rect(10,450, 150, 50)
+    
     pygame.draw.rect(w,blue,quit_box, 0, 16)
-    w.blit(quit, (30, 450))
+    w.blit(quit, (30, 630))
     coin = pygame.image.load("coin.png")
     coin = pygame.transform.scale(coin, (40,40))
-    w.blit(coin, (580,450))
+    w.blit(coin, (600,630))
     cash = small_font.render(str(money), True, black)
-    w.blit(cash, (630, 460))
+    w.blit(cash, (650, 640))
     pygame.draw.circle(w, black, (218,114), (1))
-    cash_rect = pygame.Rect(570,450, 150,50)
+    cash_rect = pygame.Rect(590,630, 150,50)
     pygame.draw.rect(w,black,cash_rect, 3)
     for i in range(len(my_aircrafts)):
       plane = pygame.image.load("2d airliner.png")
-      plane = pygame.transform.scale(plane, (15,15))
-      w.blit(plane, (my_aircrafts[i]["x"], my_aircrafts[i]["y"]))
+      plane = pygame.transform.scale(plane, (25,25))
+      w.blit(plane, (my_aircrafts[i]["x"], my_aircrafts[i]["y"] - 20))
       for d in range(len(domestic_destinations)):
         if my_aircrafts[i]["p2"] == domestic_destinations[d]["Name"]:
           destination = domestic_destinations[d]["Name"]
@@ -1607,7 +1677,6 @@ def mapview():
          
           
         if my_aircrafts[i]["p1"] == domestic_destinations[d]["Name"]:
-          
           start_x = domestic_destinations[d]["x"]
           start_y = domestic_destinations[d]["y"]
       delta_x = final_x - start_x
@@ -1632,6 +1701,8 @@ def mapview():
         p1 = random.choice(domestic_destinations)
         domestic_destinations.remove(p1)
         p2 = random.choice(domestic_destinations)
+        print(p1)
+        print(p2)
         domestic_destinations.append(p1)
         my_aircrafts[i]["p1"] = p1["Name"]
         my_aircrafts[i]["p2"] = p2["Name"]
@@ -1645,6 +1716,7 @@ def mapview():
         safety_rand = 2 * random.randint(0, aircrafts[name]['safety'])
         main_cost += safety_rand
         pilot = my_aircrafts[i]["Pilot"]
+        
         
         copilot = my_aircrafts[i]["Copilot"]
         for d in range(len(my_pilots)):
@@ -1750,7 +1822,7 @@ while running:
     credits()
     num = 0
 
-  advance_planes()
+  #advance_planes()
   c.tick(60)
 pygame.display.update()
    
