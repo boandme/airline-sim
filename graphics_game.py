@@ -301,8 +301,7 @@ domestic_destinations = [{
 p1 = random.choice(domestic_destinations)
 domestic_destinations.remove(p1)
 p2 = random.choice(domestic_destinations)
-print(p1)
-print(p2)
+
 domestic_destinations.append(p1)
 time_of_day = random.choice(["AM", "PM"])
 my_aircrafts.append({
@@ -315,7 +314,10 @@ my_aircrafts.append({
    "Copilot": "none"
 })
 
-money = 50000
+
+
+
+money = 90000
 
 def draw_background():
    bg = pygame.image.load("sky_bg.jpeg")
@@ -327,17 +329,74 @@ def advance_planes():
   global times
   global my_aircrafts
   global planing
+  global money
+  final_x = 0
+  final_y = 0
+  
+  w = pygame.display.set_mode([750,700])
+ 
+
+  start_x = 500
+  start_y = 500
+ 
+  
+
+    
+    
   for i in range(len(my_aircrafts)):
-    distance = 315
-    name = my_aircrafts[i]["Name"]
-    if my_aircrafts[i]["Pilot"] != "none":
-      if aircrafts[name]["speed"] <= 0.5:
-        aircrafts[name]["speed"] = 0.5
-      cover_dist = int(distance/(aircrafts[name]["speed"]))
-      my_aircrafts[i]["x"] += cover_dist/100
-      pygame.time.wait(10)
-    if my_aircrafts[i]["x"] > 320:
+  
+    for d in range(len(domestic_destinations)):
+      if my_aircrafts[i]["p2"] == domestic_destinations[d]["Name"]:
+          
+        destination = domestic_destinations[d]["Name"]
+        final_x = domestic_destinations[d]["x"]
+        final_y = domestic_destinations[d]["y"]
+         
+          
+      if my_aircrafts[i]["p1"] == domestic_destinations[d]["Name"]:
+          
+        start_x = domestic_destinations[d]["x"]
+        start_y = domestic_destinations[d]["y"]
+      delta_x = final_x - start_x
+      delta_y = final_y - start_y
+      
+
+    # Calculate the distance using the Pythagorean theorem
+      distance = math.sqrt(delta_x**2 + delta_y**2)
+
+    # Calculate velocity for both x and y axes
+      name = my_aircrafts[i]["Name"] 
+      speed = aircrafts[name]["speed"] * 80
+      velocity_x = delta_x / speed
+      velocity_y = delta_y / speed
+      my_aircrafts[i]["x"] += velocity_x
+      my_aircrafts[i]["y"] += velocity_y
+      
+
+      x_range_low = final_x - 10
+      x_range_high = final_x + 10
+      y_range_low = final_y - 10
+      y_range_high = final_y + 10
+      if (my_aircrafts[i]["x"] >= x_range_low and my_aircrafts[i]["x"] <=  x_range_high) and (my_aircrafts[i]["y"] >= y_range_low and my_aircrafts[i]["y"] <=  y_range_high):
+        p1 = random.choice(domestic_destinations)
+        domestic_destinations.remove(p1)
+        p2 = random.choice(domestic_destinations)
+        
+        domestic_destinations.append(p1)
+        my_aircrafts[i]["p1"] = p1["Name"]
+        my_aircrafts[i]["p2"] = p2["Name"]
+        my_aircrafts[i]["x"] = p1["x"]
+        my_aircrafts[i]["y"] = p1["y"]
+        main_cost = 0
+        name = my_aircrafts[i]["Name"]
+        main_cost = aircrafts[name]['passengers'] * aircrafts[name]['per_passenger']
+        comfort_rand = 3 * random.randint(0, aircrafts[name]['comfort'])
+        main_cost += comfort_rand
+        safety_rand = 2 * random.randint(0, aircrafts[name]['safety'])
+        main_cost += safety_rand
         pilot = my_aircrafts[i]["Pilot"]
+        
+        
         copilot = my_aircrafts[i]["Copilot"]
         for d in range(len(my_pilots)):
           
@@ -347,33 +406,25 @@ def advance_planes():
         for d in range(len(my_copilots)):
           if my_copilots[d]["Name"] == copilot:
             my_copilots[d]["Level"] += 0.3
-        p1 = random.choice(destinations)
-        destinations.remove(p1)
-        p2 = random.choice(destinations)
-        destinations.append(p1)
-        my_aircrafts[i]["p1"] = p1
-        my_aircrafts[i]["p2"] = p2
-        my_aircrafts[i]["x"] = 5
-        main_cost = 0
-        name = my_aircrafts[i]["Name"]
-        main_cost = aircrafts[name]['passengers'] * aircrafts[name]['per_passenger']
-        comfort_rand = 3 * random.randint(0, aircrafts[name]['comfort'])
-        main_cost += comfort_rand
-        safety_rand = 2 * random.randint(0, aircrafts[name]['safety'])
-        main_cost += safety_rand
-        
+
         landing,landing_pt = random.choice(list(landings.items()))
         main_cost += landing_pt
+        #total = font.render("+ " + str(main_cost), True, green)
         money += main_cost
+        #w````.blit(total, (375, 180 + i * 75))
         
         
+    
+      
      
+
+
     
     
 def autoplane():
   
  
-  planeX = 5
+  
   global money
   global move
   global times
@@ -836,19 +887,19 @@ def buyplane():
                     p1 = random.choice(domestic_destinations)
                     domestic_destinations.remove(p1)
                     p2 = random.choice(domestic_destinations)
-                    print(p1)
-                    print(p2)
+                   
                     domestic_destinations.append(p1)
                     my_aircrafts.append({
                       "Name": aircraft,
-                      "p1": p1,
-                      "p2": p2,
-                      "x": 5,
-                      "y": 5,
+                      "p1":p1["Name"],
+                      "p2": p2["Name"],
+                      "x": p1["x"],
+                      "y": p1["y"],
                       "Pilot": "none",
-                      "Copilot": "none",
-                      
-                    })
+                      "Copilot": "none"
+                })
+
+
                     money -= aircrafts[aircraft]['cost']
                   
 
@@ -1637,7 +1688,7 @@ def mapview():
   start_x = 500
   start_y = 500
   while mapping:
-    
+    print(f"Current plane0 coordinates {my_aircrafts[0]['x']},{my_aircrafts[0]['y']}")
     draw_background()
     quit_box = pygame.Rect(10,630, 150, 50)
     map = pygame.image.load("us_map.jpeg")
@@ -1650,7 +1701,7 @@ def mapview():
         x,y = pygame.mouse.get_pos()
         if quit_box.collidepoint(x,y):
           mapping = False
-        print(x,y)
+        
     
     flightmap = title_font.render("Flight Map", True, black)
     quit = font.render("< Back", True, white)
@@ -1671,27 +1722,31 @@ def mapview():
       w.blit(plane, (my_aircrafts[i]["x"], my_aircrafts[i]["y"] - 20))
       for d in range(len(domestic_destinations)):
         if my_aircrafts[i]["p2"] == domestic_destinations[d]["Name"]:
+          
           destination = domestic_destinations[d]["Name"]
           final_x = domestic_destinations[d]["x"]
           final_y = domestic_destinations[d]["y"]
          
           
         if my_aircrafts[i]["p1"] == domestic_destinations[d]["Name"]:
+          
           start_x = domestic_destinations[d]["x"]
           start_y = domestic_destinations[d]["y"]
       delta_x = final_x - start_x
       delta_y = final_y - start_y
+      
 
     # Calculate the distance using the Pythagorean theorem
       distance = math.sqrt(delta_x**2 + delta_y**2)
 
     # Calculate velocity for both x and y axes
       name = my_aircrafts[i]["Name"] 
-      speed = aircrafts[name]["speed"] * 100
+      speed = aircrafts[name]["speed"] * 80
       velocity_x = delta_x / speed
       velocity_y = delta_y / speed
       my_aircrafts[i]["x"] += velocity_x
       my_aircrafts[i]["y"] += velocity_y
+      
 
       x_range_low = final_x - 10
       x_range_high = final_x + 10
@@ -1701,8 +1756,7 @@ def mapview():
         p1 = random.choice(domestic_destinations)
         domestic_destinations.remove(p1)
         p2 = random.choice(domestic_destinations)
-        print(p1)
-        print(p2)
+        
         domestic_destinations.append(p1)
         my_aircrafts[i]["p1"] = p1["Name"]
         my_aircrafts[i]["p2"] = p2["Name"]
@@ -1733,7 +1787,7 @@ def mapview():
         #total = font.render("+ " + str(main_cost), True, green)
         money += main_cost
         #w````.blit(total, (375, 180 + i * 75))
-        pygame.display.flip()
+        
         
     
       pygame.display.flip()
