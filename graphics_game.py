@@ -332,22 +332,18 @@ def advance_planes():
   global money
   final_x = 0
   final_y = 0
-  
-  w = pygame.display.set_mode([750,700])
- 
-
   start_x = 500
   start_y = 500
- 
   
+  
+  for event in pygame.event.get():
+    if event.type == pygame.QUIT:
+      pygame.quit()
 
-    
-    
   for i in range(len(my_aircrafts)):
-  
     for d in range(len(domestic_destinations)):
       if my_aircrafts[i]["p2"] == domestic_destinations[d]["Name"]:
-          
+        
         destination = domestic_destinations[d]["Name"]
         final_x = domestic_destinations[d]["x"]
         final_y = domestic_destinations[d]["y"]
@@ -357,66 +353,69 @@ def advance_planes():
           
         start_x = domestic_destinations[d]["x"]
         start_y = domestic_destinations[d]["y"]
-      delta_x = final_x - start_x
-      delta_y = final_y - start_y
+    delta_x = final_x - start_x
+    delta_y = final_y - start_y
       
 
     # Calculate the distance using the Pythagorean theorem
-      distance = math.sqrt(delta_x**2 + delta_y**2)
+    distance = math.sqrt(delta_x**2 + delta_y**2)
 
     # Calculate velocity for both x and y axes
-      name = my_aircrafts[i]["Name"] 
-      speed = aircrafts[name]["speed"] * 80
-      velocity_x = delta_x / speed
-      velocity_y = delta_y / speed
-      my_aircrafts[i]["x"] += velocity_x
-      my_aircrafts[i]["y"] += velocity_y
+    name = my_aircrafts[i]["Name"] 
+    speed = aircrafts[name]["speed"] * 80
+    velocity_x = delta_x / speed
+    velocity_y = delta_y / speed
+    my_aircrafts[i]["x"] += velocity_x
+    my_aircrafts[i]["y"] += velocity_y
+    print(f"Current plane0 coordinates {my_aircrafts[0]['x']},{my_aircrafts[0]['y']}")
+    print(velocity_y)
       
 
-      x_range_low = final_x - 10
-      x_range_high = final_x + 10
-      y_range_low = final_y - 10
-      y_range_high = final_y + 10
-      if (my_aircrafts[i]["x"] >= x_range_low and my_aircrafts[i]["x"] <=  x_range_high) and (my_aircrafts[i]["y"] >= y_range_low and my_aircrafts[i]["y"] <=  y_range_high):
-        p1 = random.choice(domestic_destinations)
-        domestic_destinations.remove(p1)
-        p2 = random.choice(domestic_destinations)
+    x_range_low = final_x - 10
+    x_range_high = final_x + 10
+    y_range_low = final_y - 10
+    y_range_high = final_y + 10
+    if (my_aircrafts[i]["x"] >= x_range_low and my_aircrafts[i]["x"] <=  x_range_high) and (my_aircrafts[i]["y"] >= y_range_low and my_aircrafts[i]["y"] <=  y_range_high):
+      p1 = random.choice(domestic_destinations)
+      domestic_destinations.remove(p1)
+      p2 = random.choice(domestic_destinations)
         
-        domestic_destinations.append(p1)
-        my_aircrafts[i]["p1"] = p1["Name"]
-        my_aircrafts[i]["p2"] = p2["Name"]
-        my_aircrafts[i]["x"] = p1["x"]
-        my_aircrafts[i]["y"] = p1["y"]
-        main_cost = 0
-        name = my_aircrafts[i]["Name"]
-        main_cost = aircrafts[name]['passengers'] * aircrafts[name]['per_passenger']
-        comfort_rand = 3 * random.randint(0, aircrafts[name]['comfort'])
-        main_cost += comfort_rand
-        safety_rand = 2 * random.randint(0, aircrafts[name]['safety'])
-        main_cost += safety_rand
-        pilot = my_aircrafts[i]["Pilot"]
+      domestic_destinations.append(p1)
+      my_aircrafts[i]["p1"] = p1["Name"]
+      my_aircrafts[i]["p2"] = p2["Name"]
+      my_aircrafts[i]["x"] = p1["x"]
+      my_aircrafts[i]["y"] = p1["y"]
+      main_cost = 0
+      name = my_aircrafts[i]["Name"]
+      main_cost = aircrafts[name]['passengers'] * aircrafts[name]['per_passenger']
+      comfort_rand = 3 * random.randint(0, aircrafts[name]['comfort'])
+      main_cost += comfort_rand
+      safety_rand = 2 * random.randint(0, aircrafts[name]['safety'])
+      main_cost += safety_rand
+      pilot = my_aircrafts[i]["Pilot"]
         
         
-        copilot = my_aircrafts[i]["Copilot"]
-        for d in range(len(my_pilots)):
+      copilot = my_aircrafts[i]["Copilot"]
+      for d in range(len(my_pilots)):
           
-          if my_pilots[d]["Name"] == pilot:
-            my_pilots[d]["Level"] += 0.6
+        if my_pilots[d]["Name"] == pilot:
+          my_pilots[d]["Level"] += 0.6
 
-        for d in range(len(my_copilots)):
-          if my_copilots[d]["Name"] == copilot:
-            my_copilots[d]["Level"] += 0.3
+      for d in range(len(my_copilots)):
+        if my_copilots[d]["Name"] == copilot:
+          my_copilots[d]["Level"] += 0.3
 
-        landing,landing_pt = random.choice(list(landings.items()))
-        main_cost += landing_pt
+      landing,landing_pt = random.choice(list(landings.items()))
+      main_cost += landing_pt
         #total = font.render("+ " + str(main_cost), True, green)
-        money += main_cost
+      money += main_cost
         #w````.blit(total, (375, 180 + i * 75))
         
         
     
       
-     
+      c.tick(30)
+
 
 
     
@@ -1687,8 +1686,11 @@ def mapview():
 
   start_x = 500
   start_y = 500
+  plane = pygame.image.load("2d airliner.png")
+  plane = pygame.transform.scale(plane, (25,25))
+  plane = pygame.transform.rotate(plane, 335)
   while mapping:
-    print(f"Current plane0 coordinates {my_aircrafts[0]['x']},{my_aircrafts[0]['y']}")
+    
     draw_background()
     quit_box = pygame.Rect(10,630, 150, 50)
     map = pygame.image.load("us_map.jpeg")
@@ -1717,8 +1719,7 @@ def mapview():
     cash_rect = pygame.Rect(590,630, 150,50)
     pygame.draw.rect(w,black,cash_rect, 3)
     for i in range(len(my_aircrafts)):
-      plane = pygame.image.load("2d airliner.png")
-      plane = pygame.transform.scale(plane, (25,25))
+      
       w.blit(plane, (my_aircrafts[i]["x"], my_aircrafts[i]["y"] - 20))
       for d in range(len(domestic_destinations)):
         if my_aircrafts[i]["p2"] == domestic_destinations[d]["Name"]:
@@ -1744,8 +1745,13 @@ def mapview():
       speed = aircrafts[name]["speed"] * 80
       velocity_x = delta_x / speed
       velocity_y = delta_y / speed
+      print(velocity_x)
+      if (start_x > final_x):
+        plane = pygame.transform.rotate(plane,  180)
       my_aircrafts[i]["x"] += velocity_x
       my_aircrafts[i]["y"] += velocity_y
+      print(f"Current plane0 coordinates {my_aircrafts[0]['x']},{my_aircrafts[0]['y']}")
+      print(velocity_y)
       
 
       x_range_low = final_x - 10
@@ -1876,7 +1882,7 @@ while running:
     credits()
     num = 0
 
-  #advance_planes()
+  advance_planes()
   c.tick(60)
 pygame.display.update()
    
