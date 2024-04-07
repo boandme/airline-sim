@@ -317,7 +317,7 @@ my_aircrafts.append({
 
 
 
-money = 90000
+money = 150000
 
 def draw_background():
    bg = pygame.image.load("sky_bg.jpeg")
@@ -334,6 +334,19 @@ def advance_planes():
   final_y = 0
   start_x = 500
   start_y = 500
+  if len(my_pilots) >= len(my_aircrafts):
+    for i in range(len(my_aircrafts)):
+        my_aircrafts[i]["Pilot"] = my_pilots[i]["Name"]
+  else:
+    for i in range(len(my_pilots)):
+      my_aircrafts[i]["Pilot"] = my_pilots[i]["Name"]
+
+  if len(my_copilots) >= len(my_aircrafts):
+    for i in range(len(my_aircrafts)):
+      my_aircrafts[i]["Copilot"] = my_copilots[i]["Name"]
+  else:
+    for i in range(len(my_copilots)):
+      my_aircrafts[i]["Copilot"] = my_copilots[i]["Name"]
   
   
   for event in pygame.event.get():
@@ -365,9 +378,11 @@ def advance_planes():
     speed = aircrafts[name]["speed"] * 80
     velocity_x = delta_x / speed
     velocity_y = delta_y / speed
-    my_aircrafts[i]["x"] += velocity_x
-    my_aircrafts[i]["y"] += velocity_y
+    if my_aircrafts[i]["Pilot"] != "none" and my_aircrafts[i]["Copilot"] != "none":
+      my_aircrafts[i]["x"] += velocity_x
+      my_aircrafts[i]["y"] += velocity_y
     print(f"Current plane0 coordinates {my_aircrafts[0]['x']},{my_aircrafts[0]['y']}")
+   
     print(velocity_y)
       
 
@@ -414,7 +429,7 @@ def advance_planes():
         
     
       
-      c.tick(30)
+    
 
 
 
@@ -1426,7 +1441,7 @@ def view_airline():
     
     
     pygame.draw.rect(w, blue, view_pilot, 0, 16)
-    pygame.draw.rect(w,blue,quit_box, 0, 16)
+    pygame.draw.rect(w,blue,quit_box, 0, 16) 
     w.blit(quit, (30, 0))
     w.blit(p, (150, 625))
     w.blit(aircraft_title, (150, 300))
@@ -1689,6 +1704,19 @@ def mapview():
   plane = pygame.image.load("2d airliner.png")
   plane = pygame.transform.scale(plane, (25,25))
   plane = pygame.transform.rotate(plane, 335)
+  if len(my_pilots) >= len(my_aircrafts):
+    for i in range(len(my_aircrafts)):
+        my_aircrafts[i]["Pilot"] = my_pilots[i]["Name"]
+  else:
+    for i in range(len(my_pilots)):
+      my_aircrafts[i]["Pilot"] = my_pilots[i]["Name"]
+
+  if len(my_copilots) >= len(my_aircrafts):
+    for i in range(len(my_aircrafts)):
+      my_aircrafts[i]["Copilot"] = my_copilots[i]["Name"]
+  else:
+    for i in range(len(my_copilots)):
+      my_aircrafts[i]["Copilot"] = my_copilots[i]["Name"]
   while mapping:
     
     draw_background()
@@ -1746,10 +1774,9 @@ def mapview():
       velocity_x = delta_x / speed
       velocity_y = delta_y / speed
       print(velocity_x)
-      if (start_x > final_x):
-        plane = pygame.transform.rotate(plane,  180)
-      my_aircrafts[i]["x"] += velocity_x
-      my_aircrafts[i]["y"] += velocity_y
+      if my_aircrafts[i]["Pilot"] != "none" and my_aircrafts[i]["Copilot"] != "none":
+        my_aircrafts[i]["x"] += velocity_x
+        my_aircrafts[i]["y"] += velocity_y
       print(f"Current plane0 coordinates {my_aircrafts[0]['x']},{my_aircrafts[0]['y']}")
       print(velocity_y)
       
@@ -1776,6 +1803,22 @@ def mapview():
         safety_rand = 2 * random.randint(0, aircrafts[name]['safety'])
         main_cost += safety_rand
         pilot = my_aircrafts[i]["Pilot"]
+        for d in range(len(domestic_destinations)):
+          if my_aircrafts[i]["p2"] == domestic_destinations[d]["Name"]:
+          
+            destination = domestic_destinations[d]["Name"]
+            final_x = domestic_destinations[d]["x"]
+            final_y = domestic_destinations[d]["y"]
+         
+          
+          if my_aircrafts[i]["p1"] == domestic_destinations[d]["Name"]:
+          
+            start_x = domestic_destinations[d]["x"]
+            start_y = domestic_destinations[d]["y"]
+        if (start_x > final_x):
+          plane = pygame.transform.rotate(plane,  180)
+        if start_x < final_x:
+          plane = pygame.transform.rotate(plane, 180)
         
         
         copilot = my_aircrafts[i]["Copilot"]
@@ -1796,14 +1839,14 @@ def mapview():
         
         
     
-      pygame.display.flip()
-      c.tick(30)
+    pygame.display.flip()
+    c.tick(30)
 
 
 
    
 
-    pygame.display.flip()
+    
 running = True
 music = pygame.mixer.Sound("cosmic-love.mp3")
 
