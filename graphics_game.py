@@ -481,83 +481,35 @@ def autoplane():
         if (x > 10 and x < 160) and (y > 0 and y < 50):
           planing = False
     for i in range(len(my_aircrafts)):
-      distance = 315
-      name = my_aircrafts[i]["Name"]
-      cover_dist = int(distance/(aircrafts[name]["speed"]))
-      d = pygame.Rect(0, 150 + i * 100, 375, 75)
+      d = pygame.Rect(0, 150 + i * 100, 450, 75)
       pygame.draw.rect(w,black, d, 5)
-      pygame.draw.line(w,black, (25, 200 + i * 100), (350, 200 + i * 100), 3)
-      pygame.draw.circle(w,black,(25,200 + i * 100),4)
-      pygame.draw.circle(w,black,(350,200 + i * 100), 4)
       plane_name = small_font.render(my_aircrafts[i]["Name"], True, black)
-      point1 = small_font.render(my_aircrafts[i]["p1"], True, black)
-      point2 = small_font.render(my_aircrafts[i]["p2"], True, black)
-      w.blit(plane_name, (150, 165 + i * 100))
-      w.blit(point1, (15,165 + i * 100))
-      w.blit(point2, (310,165 + i * 100))
-      plane = pygame.image.load("airliner.png")
-      plane = pygame.transform.scale(plane, (50,35))
-      w.blit(plane, (my_aircrafts[i]["x"], 182 + i * 100))
+      w.blit(plane_name, (10, 175 + i * 100))
       name = my_aircrafts[i]["Name"]
       exclam = pygame.image.load("red-exclam.jpg")
+      check = pygame.image.load("green-check.jpeg")
       exclam = pygame.transform.scale(exclam ,(50,50))
-      if my_aircrafts[i]["Pilot"] != "none" and my_aircrafts[i]["Copilot"] != "none":
-        
-        if aircrafts[name]["speed"] < 0.25:
-          aircrafts[name]["speed"] = 0.25
-        cover_dist = int(distance/(aircrafts[name]["speed"]))
-        my_aircrafts[i]["x"] += cover_dist/100
-        pygame.time.wait(10)
-      elif my_aircrafts[i]["Pilot"] == "none" and my_aircrafts[i]["Copilot"] == "none":
+      check  = pygame.transform.scale(check , (50,50))
+      if my_aircrafts[i]["Pilot"] == "none" and my_aircrafts[i]["Copilot"] == "none":
         nopilot = mid_small_font.render("No Pilot or Copilot", True, red)
-        w.blit(exclam, (375, 165 + i * 100))
-        w.blit(nopilot, (450, 175 + i * 100))
+        w.blit(exclam, (75, 165 + i * 100))
+        w.blit(nopilot, (125, 175 + i * 100))
       elif my_aircrafts[i]["Pilot"] == "none":
-        w.blit(exclam, (375, 165 + i * 100))
         nopilot = mid_small_font.render("No Pilot", True, red)
-        w.blit(nopilot, (450, 175 + i * 100))
+        w.blit(exclam, (75, 165 + i * 100))
+        w.blit(nopilot, (125, 175 + i * 100))
       elif my_aircrafts[i]["Copilot"] == "none":
-        w.blit(exclam, (375, 165 + i * 100))
         nopilot = mid_small_font.render("No Copilot", True, red)
-        w.blit(nopilot, (450, 175 + i * 100))
-      
-      if my_aircrafts[i]["x"] > 320:
-        p1 = random.choice(destinations)
-        destinations.remove(p1)
-        p2 = random.choice(destinations)
-        destinations.append(p1)
-        my_aircrafts[i]["p1"] = p1
-        my_aircrafts[i]["p2"] = p2
-        my_aircrafts[i]["x"] = 5
-        main_cost = 0
-        name = my_aircrafts[i]["Name"]
-        main_cost = aircrafts[name]['passengers'] * aircrafts[name]['per_passenger']
-        comfort_rand = 3 * random.randint(0, aircrafts[name]['comfort'])
-        main_cost += comfort_rand
-        safety_rand = 2 * random.randint(0, aircrafts[name]['safety'])
-        main_cost += safety_rand
-        pilot = my_aircrafts[i]["Pilot"]
-        
-        copilot = my_aircrafts[i]["Copilot"]
-        for d in range(len(my_pilots)):
-          
-          if my_pilots[d]["Name"] == pilot:
-            my_pilots[d]["Level"] += 0.6
+        w.blit(exclam, (75, 165 + i * 100))
+        w.blit(nopilot, (125, 175 + i * 100))
+      else:
+        yespilot = mid_small_font.render("Good Health", True, green)
+        w.blit(check,(75, 165 + i * 100))
+        w.blit(yespilot, (125, 175+ i * 100))
 
-        for d in range(len(my_copilots)):
-          if my_copilots[d]["Name"] == copilot:
-            my_copilots[d]["Level"] += 0.3
 
-        landing,landing_pt = random.choice(list(landings.items()))
-        main_cost += landing_pt
-        #total = font.render("+ " + str(main_cost), True, green)
-        money += main_cost
-        #w````.blit(total, (375, 180 + i * 75))
-        pygame.display.flip()
-        
-    c.tick(60)
     pygame.display.flip()
-
+     
     
           
   
@@ -568,6 +520,11 @@ def sellplane():
    global my_aircrafts
    selling = True
    while selling:
+    draw_background()
+    quit = font.render("< Back", True, white)
+    quit_box = pygame.Rect(10,0, 150, 50)
+    pygame.draw.rect(w,blue,quit_box, 0, 16)
+    w.blit(quit, (30, 0))
     for event in pygame.event.get():
       if event.type == pygame.MOUSEBUTTONDOWN:
         x,y = pygame.mouse.get_pos()
@@ -585,17 +542,13 @@ def sellplane():
             pygame.display.flip()
             pygame.time.wait(1000)
 
-        if (x > 10 and x < 160) and (y > 0 and y < 50):
+        if quit_box.collidepoint(x,y):
           selling = False
 
       if event.type == pygame.QUIT:
         pygame.quit()
     
-    draw_background()
-    quit = font.render("< Back", True, white)
-    quit_box = pygame.Rect(10,0, 150, 50)
-    pygame.draw.rect(w,blue,quit_box, 0, 16)
-    w.blit(quit, (30, 0))
+    
     coin = pygame.image.load("coin.png")
     coin = pygame.transform.scale(coin, (40,40))
     w.blit(coin, (610,5))
@@ -1666,13 +1619,18 @@ def credits():
    draw_background()
    crediting = True
    while crediting:
+    quit = font.render("< Back", True, white)
+    quit_box = pygame.Rect(10,0, 150, 50)
+    pygame.draw.rect(w,blue,quit_box, 0, 16)
+    w.blit(quit, (30, 10))
     advance_planes()
     for event in pygame.event.get():
       if event.type == pygame.QUIT:
         pygame.quit()
-      if event.type == pygame.KEYDOWN:
-         if event.key == pygame.K_RETURN:
-            crediting = False
+      if event.type == pygame.MOUSEBUTTONDOWN:
+        x,y = pygame.mouse.get_pos()
+        if quit_box.collidepoint(x,y):
+          crediting = False
        
     credit_title = title_font.render("-------- Credits --------", True, white)
     test_title = font.render("Game Testers: ", True, white)
@@ -1682,13 +1640,11 @@ def credits():
     leave_view = font.render("Press enter to leave", True, white)
     w.blit(credit_title, (100, 50))
     w.blit(test_title, (150, 150))
-    
+    w.blit(leave_view, (200, 700))
     w.blit(test1, (150, 250))
     w.blit(test2, (150, 275))
     w.blit(music, (150, 325))
-    r = pygame.Rect(0,685, 750, 65)
-    pygame.draw.rect(w,blue,r, 0, 16)
-    w.blit(leave_view, (200, 700))
+   
     pygame.display.flip()
 
 def mapview():
@@ -1860,11 +1816,11 @@ while running:
   rly_small_font = pygame.font.SysFont("Karla", 20)
   title = title_font.render("Airline Simulator", True, white)
   w.blit(title,(200, 50))
-  opt1 = font.render("View Current Planes ", True, white)
+  opt1 = font.render("Plane Map ", True, white)
   opt2 = font.render("Shop", True, white)
-  opt3 = font.render("Airline Profile", True, white)
+  opt3 = font.render("View Airplanes", True, white)
   opt4 = font.render("Sell Planes", True, white)
-  opt5 = font.render("Credits", True, white)
+  opt5 = font.render("Credits/Help", True, white)
   
   #w.blit(opt5, (200, 600))
   coin = pygame.image.load("coin.png")
@@ -1916,7 +1872,7 @@ while running:
     buyplane()
     num = 0
   elif num == 3:
-    view_airline()
+    autoplane()
     num = 0
   elif num == 4:
     sellplane()
@@ -1926,6 +1882,6 @@ while running:
     num = 0
 
   advance_planes()
-  c.tick(60)
+  
 pygame.display.update()
    
